@@ -73,9 +73,28 @@ void freeMatrix(int **a, int nl)
 	free(a);
 }
 
+int** cutMatrix(int** b, int* l, int* c, int nl, int *li, int nc, int *ci)
+{
+	printf("cutMatrix %dx%d --> %dx%d\n", *l, *c, nl, nc);
+	int **a;
+	int i,j;
+	
+	a = malloc(nl * sizeof(int*));
+	for (i = 0; i < nl; i++) {
+		a[i] = malloc(nc * sizeof(int));
+		for (j = 0; j < nc; j++){
+			a[i][j] = b[li[i]][ci[j]];
+		}
+	}
+	freeMatrix(b, *l);
+	*l = nl;
+	*c = nc;
+	return a;
+}
+
 int** transposeMatrix(int** b, int* l, int* c)
 {
-	printf("transpose %dx%d --> %dx%d\n",*l,*c,*c,*l);
+	printf("transposeMatrix %dx%d --> %dx%d\n",*l,*c,*c,*l);
 	int **a;
 	int i,j;
 	int nl = *c;

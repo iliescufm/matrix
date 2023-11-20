@@ -13,6 +13,9 @@ void printMatrix(int **, int, int);
 int** transposeMatrix(int**, int*, int*);
 // transpose = transposeMatrix(matrix, lines-pointer, columns-pointer)
 
+// matrix = (matrix, lines-p, columns-p, n-lines-to-cut, lines-to-cut, n-col-to-cut, cols-to-cut)
+int** cutMatrix(int**, int*, int*, int, int*, int, int*);
+
 int** reizeMatrix(int** , int, int, int, int);
 // resized = reizeMatrix(matrix, lines, columns, newlines, newcolumns)
 

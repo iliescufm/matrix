@@ -57,17 +57,18 @@ int main(void)
 	q = replaceMatrixinCollection(q, z, ql, qc, 2, b, 3, 7);
 	freeMatrix(b,ql[z]);
 
-	b = initAllocMatrix(2,4,21);
-	q = addMatrixtoCollection(q, &z, ql, qc, b, 2, 4);
-
-	int bl=2;
-	int bc=4;
-	b = transposeMatrix(b,&bl,&bc);
+	int bl;
+	int bc;
+	char m1[] = "1 2 3 4,11 12 13 14, 21 22 23 24";
+	b = stringToMatrix(m1, &bl, &bc);
 	printMatrix(b,bl,bc);
 	q = addMatrixtoCollection(q, &z, ql, qc, b, bl, bc);
+	int li[] = {0,1};
+	int lc[] = {0,2,3};
+	b = cutMatrix(b,&bl,&bc,2,li,3,lc);
 	q = replaceMatrixinCollection(q, z, ql, qc, 1, b, bl, bc);
 
-	freeMatrix(b,ql[z]);
+	freeMatrix(b,bl);
 
     printCollection(q,z,ql,qc);
 	freeCollection(q,z,ql,qc);
