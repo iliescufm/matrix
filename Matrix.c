@@ -63,6 +63,22 @@ void printMatrix(int **a, int nl, int nc)
 	}
 }
 
+int sumMatrix(int **a, int nl, int nc)
+{
+    printf("sumMatrix %dx%d = ",nl,nc);
+	int i,j;
+	int s = 0;
+	for (i=0; i<nl; i++)
+	{
+		for (j=0; j<nc; j++){
+			s = s + a[i][j];
+		}
+	}
+	printf("%d\n",s);
+	return s;
+}
+
+
 void freeMatrix(int **a, int nl)
 {
     printf("freeMatrix %d\n",nl);
