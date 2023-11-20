@@ -1,3 +1,11 @@
+/*
+Matrix.c
+v1.2
+
+
+
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -55,19 +63,34 @@ void printMatrix(int **a, int nl, int nc)
 	}
 }
 
-int** echoMatrix(int** b, int nl, int nc)
+void freeMatrix(int **a, int nl)
 {
-	printf("echoMatrix %dx%d\n",nl,nc);
+    printf("freeMatrix %d\n",nl);
+	for (int i=0; i<nl; i++)
+	{
+		free(a[i]);
+	}
+	free(a);
+}
+
+int** transposeMatrix(int** b, int* l, int* c)
+{
+	printf("transpose %dx%d --> %dx%d\n",*l,*c,*c,*l);
 	int **a;
 	int i,j;
+	int nl = *c;
+	int nc = *l;
 	
 	a = malloc(nl * sizeof(int*));
 	for (i = 0; i < nl; i++) {
 		a[i] = malloc(nc * sizeof(int));
 		for (j = 0; j < nc; j++){
-			a[i][j] = b[i][j];
+			a[i][j] = b[j][i];
 		}
 	}
+	freeMatrix(b, *l);
+	*l = nl;
+	*c = nc;
 	return a;
 }
 
@@ -94,15 +117,6 @@ int** reizeMatrix(int** b, int nl, int nc, int zl, int zc)
 	return a;
 }
 
-void freeMatrix(int **a, int nl)
-{
-    printf("freeMatrix %d\n",nl);
-	for (int i=0; i<nl; i++)
-	{
-		free(a[i]);
-	}
-	free(a);
-}
 
 void printMatrixbyIndex(int **a, int k, int *ql, int *qc)
 {

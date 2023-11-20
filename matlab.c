@@ -1,6 +1,6 @@
 /*
 matlab.c
-v1.1
+v1.2
 
 gcc matlab.c stringToMatrix.c Matrix.c Collection.c
 
@@ -57,8 +57,16 @@ int main(void)
 	q = replaceMatrixinCollection(q, z, ql, qc, 2, b, 3, 7);
 	freeMatrix(b,ql[z]);
 
-	b = initAllocMatrix(2,5,21);
-	q = addMatrixtoCollection(q, &z, ql, qc, b, 2, 5);
+	b = initAllocMatrix(2,4,21);
+	q = addMatrixtoCollection(q, &z, ql, qc, b, 2, 4);
+
+	int bl=2;
+	int bc=4;
+	b = transposeMatrix(b,&bl,&bc);
+	printMatrix(b,bl,bc);
+	q = addMatrixtoCollection(q, &z, ql, qc, b, bl, bc);
+	q = replaceMatrixinCollection(q, z, ql, qc, 1, b, bl, bc);
+
 	freeMatrix(b,ql[z]);
 
     printCollection(q,z,ql,qc);

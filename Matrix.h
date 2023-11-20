@@ -10,8 +10,8 @@ void printVector(int *, int);
 void printMatrix(int **, int, int);
 // printMatrix(matrix, lines, columns)
 
-int** echoMatrix(int**, int, int);
-// copy = echoMatrix(matrix, lines, columns)
+int** transposeMatrix(int**, int*, int*);
+// transpose = transposeMatrix(matrix, lines-pointer, columns-pointer)
 
 int** reizeMatrix(int** , int, int, int, int);
 // resized = reizeMatrix(matrix, lines, columns, newlines, newcolumns)
