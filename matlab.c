@@ -59,7 +59,7 @@ int main(void)
 
 	int bl;
 	int bc;
-	char m1[] = "1 2 3 4,11 12 13 14, 21 22 23 24";
+	char m1[] = "1 0 1 1,1 1 1 1, 1 0 2 2";
 	b = stringToMatrix(m1, &bl, &bc);
 	printMatrix(b,bl,bc);
 	q = addMatrixtoCollection(q, &z, ql, qc, b, bl, bc);
@@ -67,6 +67,7 @@ int main(void)
 	int lc[] = {0,2,3};
 	b = cutMatrix(b,&bl,&bc,2,li,3,lc);
 	q = replaceMatrixinCollection(q, z, ql, qc, 1, b, bl, bc);
+	int s = sumMatrix(b,bl,bc);
 
 	freeMatrix(b,bl);
 
