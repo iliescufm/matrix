@@ -13,3 +13,6 @@ int*** resizeCollectionCapacity(int***, int, int, int*, int*);
 // collection = replaceMatrixinCollection(colection, size, linesvector, columnsvector, index, matrix, lines, columns)
 int*** replaceMatrixinCollection(int***, int, int*, int*, int, int**, int, int);
 
+void printCollectionandSum(int ***a, int z, int *l, int *c, int *sum);
+
+int*** sortCollection(int ***q, int z, int *ql, int *qc, int *top);

@@ -23,6 +23,20 @@ int* initAllocVector(int z, int v)
 	return a;
 }
 
+int* echoVector(int* b, int z)
+{
+	int i;
+	int* a;
+	a = malloc(z * sizeof(int));
+
+	for (i=0;i<z;i++)
+		a[i] = b[i];
+	
+	return a;
+
+}
+
+
 int* resizeVector(int* a, int z, int nz)
 {
 	printf("resizeVector %d-->%d\n",z,nz);

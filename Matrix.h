@@ -7,6 +7,8 @@ int* resizeVector(int*, int, int);
 void printVector(int *, int);
 // printVector(vector, size) 
 
+int* echoVector(int*, int);
+//vector = echoVector(vector, size)
 
 int sumMatrix(int **a, int nl, int nc);
 // sum = sumMatrix (matrix, lines, colums);

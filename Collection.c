@@ -20,6 +20,16 @@ void printCollection(int ***a, int z, int *l, int *c)
 	}
 }
 
+void printCollectionandSum(int ***a, int z, int *l, int *c, int *sum)
+{
+    printf("printCollectionandSum /%d/\n", z);
+	int i,j,k;
+	for(k = 0; k < z; k++) {
+		printf("#%d $%d\n",k,sum[k]);
+		printMatrix(a[k], l[k], c[k]);
+	}
+}
+
 // freeCollection(collection, size, linesvector, columnsvector)
 void freeCollection(int ***a, int z, int *l, int *c)
 {
@@ -59,6 +69,38 @@ int*** addMatrixtoCollection(int*** q, int* z, int* ql, int* qc, int** b, int l,
 	}
 	freeCollection(q,*z,ql,qc);
 	*z = nw;
+	return a;
+}
+
+int*** sortCollection(int ***q, int z, int *ql, int *qc, int *top)
+{
+    printf("sortCollection #%d \n", z);
+	int ***a;
+	int i,j,k;
+	int *ol = malloc(z * sizeof(int));
+	int *oc = malloc(z * sizeof(int));
+	for (k=0 ; k < z ; k++) {
+		ol[k] = ql[k];
+		oc[k] = qc[k];
+	}
+
+	a = malloc(z * sizeof(int**));
+	for (k = 0; k < z; k++) {
+		a[k]=malloc(ql[top[k]] * sizeof(int*));
+		for (i = 0; i < ql[top[k]]; i++) {
+			a[k][i] = malloc(qc[top[k]] * sizeof(int));
+				for (j = 0; j < qc[top[k]]; j++){
+						a[k][i][j] = q[top[k]][i][j];
+				}
+		}
+	}
+	freeCollection(q,z,ql,qc);
+	for (k=0 ; k < z ; k++) {
+		ql[k] = ol[top[k]]; 
+		qc[k] = oc[top[k]]; 
+	}
+	free(ol);
+	free(oc);
 	return a;
 }
 

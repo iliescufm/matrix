@@ -35,7 +35,7 @@ int main()
     idx = sortVector(arr,n);
 	print(arr, n);
     print(idx, n);
-    printf("use top index\n");
+    printf(" - use top index\n");
     for (int i = 0; i < n;  i++){
         printf(" %3d",vct[idx[i]]);
     }
@@ -49,7 +49,6 @@ int main()
     idx = sortVector(v,3);
 	print(v, 3);
     print(idx, 3);
-
 
 	return 0;
 }
