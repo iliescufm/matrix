@@ -279,11 +279,14 @@ void copyMatrix(int **source, int **destination, int size) {
 }
 
 // Functie pentru a ridica o matrice la o putere
-void powerMatrix(int **matrix, int **result, int size, int exponent) {
+void powerMatrix(int **matrix, int size, int exponent) {
     // Matricea rezultat este initializata cu matricea identitate
     int **temp = (int **)malloc(size * sizeof(int *));
+	int **result = (int **)malloc(size * sizeof(int *));
     for (int i = 0; i < size; i++) {
         temp[i] = (int *)malloc(size * sizeof(int));
+		result[i] = (int *)malloc(size * sizeof(int));
+
         for (int j = 0; j < size; j++) {
             if (i == j) {
                 temp[i][j] = 1;
@@ -306,11 +309,14 @@ void powerMatrix(int **matrix, int **result, int size, int exponent) {
     }
 
     // Copierea rezultatului final în matricea de rezultate
-    copyMatrix(temp, result, size);
+    copyMatrix(temp, matrix, size);
 
     // Eliberarea memoriei alocate pentru matricea temporară
     for (int i = 0; i < size; i++) {
         free(temp[i]);
+		free(result[i]);
+
     }
+    free(result);
     free(temp);
 }

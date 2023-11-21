@@ -9,9 +9,8 @@ int main(int argc, char* argv[])
 
     int size = 4;
     int** matrix = initAllocMatrix(size,size,1);
-    int** result = initAllocMatrix(size,size,-1);
-    powerMatrix(matrix, result, size, n);
+    powerMatrix(matrix, size, n);
 
-    printMatrix(result,size,size);
+    printMatrix(matrix,size,size);
 
 }
