@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Matrix.h"
+#include "Exponent.h"
 
 // printCollection (collection, size, linesvector, columnsvector)
 void printCollection(int ***a, int z, int *l, int *c)
@@ -147,6 +148,16 @@ int*** replaceMatrixinCollection(int*** q, int nw, int* ql, int* qc, int z, int*
 	ql[z]=l;
 	qc[z]=c;
 	return a;
+}
+
+void exponentMatrixinCollection(int ***q,int z,int* ql, int* qc,int k,int n) 
+{
+	printf("exponentMatrixinCollection #%d ^%d\n",k,n);
+	int i,j;
+	for (i = 0; i < ql[k]; i++)
+		for (j = 0; j < qc[k]; j++)
+			q[k][i][j] = exponentiation(q[k][i][j],n);
+
 }
 
 

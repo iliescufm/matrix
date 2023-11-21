@@ -2,7 +2,7 @@
 matlab.c
 v1.3
 
-gcc matlab.c Radix.c Matrix.c Collection.c
+gcc matlab.c Radix.c Exponent.c Matrix.c Collection.c
 
 */
 
@@ -14,6 +14,7 @@ gcc matlab.c Radix.c Matrix.c Collection.c
 #include "Matrix.h"
 #include "Collection.h"
 #include "Radix.h"
+#include "Exponent.h"
 
 
 void pl(){
@@ -75,10 +76,12 @@ int main(void)
 	sum[2] = sumMatrix(b, bl, bc);
 	freeMatrix(b,bl);
 
+	exponentMatrixinCollection(q,z,ql,qc,0,4);
+
     printCollectionandSum(q,z,ql,qc,sum);
-	top = sortVector(sum,z);
-	q = sortCollection(q,z,ql,qc,top);
-    printCollectionandSum(q,z,ql,qc,sum);
+	// top = sortVector(sum,z);
+	// q = sortCollection(q,z,ql,qc,top);
+    // printCollectionandSum(q,z,ql,qc,sum);
 
 	freeCollection(q,z,ql,qc);
 

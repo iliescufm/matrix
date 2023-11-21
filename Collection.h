@@ -16,3 +16,6 @@ int*** replaceMatrixinCollection(int***, int, int*, int*, int, int**, int, int);
 void printCollectionandSum(int ***a, int z, int *l, int *c, int *sum);
 
 int*** sortCollection(int ***q, int z, int *ql, int *qc, int *top);
+
+void exponentMatrixinCollection(int ***q,int z,int* ql, int* qc,int k,int n);
+
