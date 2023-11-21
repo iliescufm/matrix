@@ -10,6 +10,8 @@ v1.2
 #include <string.h>
 #include <stdlib.h>
 
+# define D 0
+
 int* initAllocVector(int z, int v)
 {
 	int i;
@@ -39,7 +41,7 @@ int* echoVector(int* b, int z)
 
 int* resizeVector(int* a, int z, int nz)
 {
-	printf("resizeVector %d-->%d\n",z,nz);
+	if (D) printf("resizeVector %d-->%d\n",z,nz);
 	int* t;
 	int i,x1,x2;
 	t = malloc(nz * sizeof(int));
@@ -54,18 +56,18 @@ int* resizeVector(int* a, int z, int nz)
 
 void printVector(int *a, int n)
 {
-	printf("printVector %d\n",n);
+	if (D) printf("printVector %d\n",n);
 	int i;
 	for (i=0; i<n; i++)
 	{
-		printf("%2d ",a[i]);
+		printf("%2d [%x]",a[i],&a[i]);
 	}
 	printf("\n");
 }
 
 void printMatrix(int **a, int nl, int nc)
 {
-    printf("printMatrix %dx%d\n",nl,nc);
+    if (D) printf("printMatrix %dx%d\n",nl,nc);
 	int i,j;
 	for (i=0; i<nl; i++)
 	{
@@ -79,7 +81,7 @@ void printMatrix(int **a, int nl, int nc)
 
 int sumMatrix(int **a, int nl, int nc)
 {
-    printf("sumMatrix %dx%d = ",nl,nc);
+    if (D) printf("sumMatrix %dx%d = ",nl,nc);
 	int i,j;
 	int s = 0;
 	for (i=0; i<nl; i++)
@@ -95,7 +97,7 @@ int sumMatrix(int **a, int nl, int nc)
 
 void freeMatrix(int **a, int nl)
 {
-    printf("freeMatrix %d\n",nl);
+    if (D) printf("freeMatrix %d\n",nl);
 	for (int i=0; i<nl; i++)
 	{
 		free(a[i]);
@@ -105,7 +107,7 @@ void freeMatrix(int **a, int nl)
 
 int** cutMatrix(int** b, int* l, int* c, int nl, int *li, int nc, int *ci)
 {
-	printf("cutMatrix %dx%d --> %dx%d\n", *l, *c, nl, nc);
+	if (D) printf("cutMatrix %dx%d --> %dx%d\n", *l, *c, nl, nc);
 	int **a;
 	int i,j;
 	
@@ -124,7 +126,7 @@ int** cutMatrix(int** b, int* l, int* c, int nl, int *li, int nc, int *ci)
 
 int** transposeMatrix(int** b, int* l, int* c)
 {
-	printf("transposeMatrix %dx%d --> %dx%d\n",*l,*c,*c,*l);
+	if (D) printf("transposeMatrix %dx%d --> %dx%d\n",*l,*c,*c,*l);
 	int **a;
 	int i,j;
 	int nl = *c;
@@ -145,7 +147,7 @@ int** transposeMatrix(int** b, int* l, int* c)
 
 int** reizeMatrix(int** b, int nl, int nc, int zl, int zc)
 {
-	printf("reizeMatrix %dx%d --> %dx%d\n",nl,nc,zl,zc);
+	if (D) printf("reizeMatrix %dx%d --> %dx%d\n",nl,nc,zl,zc);
 	int **a;
 	int i,j;
 	
@@ -172,7 +174,7 @@ void printMatrixbyIndex(int **a, int k, int *ql, int *qc)
     int nl=ql[k];
     int nc=qc[k];
 
-    printf("printMatrixbyIndex %dx%d\n",nl,nc);
+    if (D) printf("printMatrixbyIndex %dx%d\n",nl,nc);
 	int i,j;
 	for (i=0; i<nl; i++)
 	{
@@ -253,70 +255,4 @@ int **stringToMatrix(char *mx, int *rows, int *columns) {
     }
 
     return matrix;
-}
-
-// Functie pentru a multiplica doua matrice
-void multiplyMatrices(int **A, int **B, int **result, int size) {
-    int i, j, k;
-    for (i = 0; i < size; i++) {
-        for (j = 0; j < size; j++) {
-            result[i][j] = 0;
-            for (k = 0; k < size; k++) {
-                result[i][j] += A[i][k] * B[k][j];
-            }
-        }
-    }
-}
-
-// Functie pentru a copia matricea sursa in matricea destinatie
-void copyMatrix(int **source, int **destination, int size) {
-    int i, j;
-    for (i = 0; i < size; i++) {
-        for (j = 0; j < size; j++) {
-            destination[i][j] = source[i][j];
-        }
-    }
-}
-
-// Functie pentru a ridica o matrice la o putere
-void powerMatrix(int **matrix, int size, int exponent) {
-    // Matricea rezultat este initializata cu matricea identitate
-    int **temp = (int **)malloc(size * sizeof(int *));
-	int **result = (int **)malloc(size * sizeof(int *));
-    for (int i = 0; i < size; i++) {
-        temp[i] = (int *)malloc(size * sizeof(int));
-		result[i] = (int *)malloc(size * sizeof(int));
-
-        for (int j = 0; j < size; j++) {
-            if (i == j) {
-                temp[i][j] = 1;
-            } else {
-                temp[i][j] = 0;
-            }
-        }
-    }
-
-    // Ridicarea matricei la putere folosind metoda exponențială logaritmică
-    while (exponent > 0) {
-        if (exponent % 2 == 1) {
-            multiplyMatrices(temp, matrix, result, size);
-            copyMatrix(result, temp, size);
-        }
-
-        multiplyMatrices(matrix, matrix, result, size);
-        copyMatrix(result, matrix, size);
-        exponent /= 2;
-    }
-
-    // Copierea rezultatului final în matricea de rezultate
-    copyMatrix(temp, matrix, size);
-
-    // Eliberarea memoriei alocate pentru matricea temporară
-    for (int i = 0; i < size; i++) {
-        free(temp[i]);
-		free(result[i]);
-
-    }
-    free(result);
-    free(temp);
 }

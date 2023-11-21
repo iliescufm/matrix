@@ -17,5 +17,4 @@ void printCollectionandSum(int ***a, int z, int *l, int *c, int *sum);
 
 int*** sortCollection(int ***q, int z, int *ql, int *qc, int *top);
 
-void exponentMatrixinCollection(int ***q,int z,int* ql, int* qc,int k,int n);
-
+int*** deleteMatrixfromCollection(int*** q, int* nw, int* ql, int* qc, int z);

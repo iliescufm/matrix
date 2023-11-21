@@ -15,6 +15,7 @@ gcc matlab.c Radix.c Exponent.c Matrix.c Collection.c
 #include "Collection.h"
 #include "Radix.h"
 #include "Exponent.h"
+#include "PowerMatrix.h"
 
 
 void pl(){
@@ -39,48 +40,87 @@ int main(void)
 
 
 	int z=0;   //collection size;
-    b = initAllocMatrix(2,2,100);
-	sum[z] = sumMatrix(b,2,2);
+    b = initAllocMatrix(2,2,10);
 	q = addMatrixtoCollection(q, &z, ql, qc, b, 2, 2);
 	freeMatrix(b,ql[z]);
 
-	b = initAllocMatrix(3,2,20);
-	sum[z] = sumMatrix(b,3,2);
-	q = addMatrixtoCollection(q, &z, ql, qc, b, 3, 2);
+	powerMatrix(q[0], ql[0], 2);
+
+    b = initAllocMatrix(4,4,1);
+	q = addMatrixtoCollection(q, &z, ql, qc, b, 4, 4);
 	freeMatrix(b,ql[z]);
 
-    q = resizeCollectionCapacity(q,nz,nz*2,ql,qc);
-	nz = nz * 2;
+	powerMatrix(q[1], ql[1], 2);
 
-	b = initAllocMatrix(5,5,0);
-	sum[z] = sumMatrix(b,5,5);
-	q = addMatrixtoCollection(q, &z, ql, qc, b, 5, 5);
+	b = initAllocMatrix(3,3,1);
+	q = addMatrixtoCollection(q, &z, ql, qc, b, 3, 3);
 	freeMatrix(b,ql[z]);
 
-	b = initAllocMatrix(3,7,2);
-	q = replaceMatrixinCollection(q, z, ql, qc, 0, b, 3, 7);
-	sum[0] = sumMatrix(b,3,7);
-	freeMatrix(b,ql[z]);
+	powerMatrix(q[1], ql[1], 2);
 
-	int bl;
-	int bc;
-	char m1[] = "1 0 1 1,1 1 1 1, 1 0 2 2";
-	b = stringToMatrix(m1, &bl, &bc);
-	sum[z] = sumMatrix(b, bl, bc);
-	q = addMatrixtoCollection(q, &z, ql, qc, b, bl, bc);
-
-	int li[] = {0,1};
-	int lc[] = {0,2,3};
-	b = cutMatrix(b,&bl,&bc,2,li,3,lc);
-	q = replaceMatrixinCollection(q, z, ql, qc, 2, b, bl, bc);
-	sum[2] = sumMatrix(b, bl, bc);
-	freeMatrix(b,bl);
-
-	exponentMatrixinCollection(q,z,ql,qc,0,4);
+	printVector(ql,z);
+	printVector(qc,z);
+    q = deleteMatrixfromCollection(q, &z, ql, qc, 0);
+	printVector(ql,z);
+	printVector(qc,z);
 
     printCollectionandSum(q,z,ql,qc,sum);
+
+
+	// b = initAllocMatrix(3,2,20);
+	// sum[z] = sumMatrix(b,3,2);
+	// q = addMatrixtoCollection(q, &z, ql, qc, b, 3, 2);
+	// freeMatrix(b,ql[z]);
+
+    // q = resizeCollectionCapacity(q,nz,nz*2,ql,qc);
+	// nz = nz * 2;
+
+	// b = initAllocMatrix(5,5,0);
+	// sum[z] = sumMatrix(b,5,5);
+	// q = addMatrixtoCollection(q, &z, ql, qc, b, 5, 5);
+	// freeMatrix(b,ql[z]);
+
+	// // b = initAllocMatrix(3,7,2);
+	// // q = replaceMatrixinCollection(q, z, ql, qc, 0, b, 3, 7);
+	// // sum[0] = sumMatrix(b,3,7);
+	// // freeMatrix(b,ql[z]);
+
+	// int bl;
+	// int bc;
+	// char m1[] = "1 0 1 1,1 1 1 1, 1 0 2 2";
+	// b = stringToMatrix(m1, &bl, &bc);
+	// sum[z] = sumMatrix(b, bl, bc);
+	// q = addMatrixtoCollection(q, &z, ql, qc, b, bl, bc);
+
+	// int li[] = {0};
+	// int lc[] = {0};
+	// q[2] = cutMatrix(q[2],&ql[2],&qc[2],1,li,1,lc);
+	// //q = replaceMatrixinCollection(q, z, ql, qc, 2, b, bl, bc);
+	// sum[2] = sumMatrix(q[2], ql[2], qc[2]);
+	// //freeMatrix(b,bl);
+
+
+	// int li1[] = {0,1};
+	// int lc1[] = {0,1};
+	// q[1] = cutMatrix(q[1],&ql[1],&qc[1],2,li1,2,lc1);
+	// //q = replaceMatrixinCollection(q, z, ql, qc, 2, b, bl, bc);
+	// sum[1] = sumMatrix(q[1], ql[1], qc[1]);
+	// //freeMatrix(b,bl);
+
+	// printVector(ql,z);
+	// printVector(qc,z);
+
+	// q = deleteMatrixfromCollection(q, &z, ql, qc, 1);
+
+
+	// printVector(ql,z);
+	// printVector(qc,z);
+
+
+    // printCollectionandSum(q,z,ql,qc,sum);
 	// top = sortVector(sum,z);
 	// q = sortCollection(q,z,ql,qc,top);
+
     // printCollectionandSum(q,z,ql,qc,sum);
 
 	freeCollection(q,z,ql,qc);

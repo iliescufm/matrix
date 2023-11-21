@@ -34,6 +34,3 @@ int** initAllocMatrix(int , int, int);
 
 // matrix = stringToMatrix(string, rows-pointer, columns-pointer)
 int **stringToMatrix(char *mx, int *rows, int *columns);
-
-void powerMatrix(int **matrix, int size, int exponent);
-
