@@ -1,22 +1,27 @@
-#include <stdio.h>
 #include <stdlib.h>
 
-// Functie pentru a aduna doua matrice
-void addMatrices(int **A, int **B, int **C, int size) {
-    for (int i = 0; i < size; i++) {
+int** addMatrices(int **A, int **B, int size) {
+    int** C = malloc(size * sizeof(int*));
+        for (int i = 0; i < size; i++) {
+            C[i] = malloc(size * sizeof(int));
         for (int j = 0; j < size; j++) {
             C[i][j] = A[i][j] + B[i][j];
         }
     }
+    return C;
 }
 
 // Functie pentru a scadea doua matrice
-void subtractMatrices(int **A, int **B, int **C, int size) {
+int** subtractMatrices(int **A, int **B, int size) {
+    int** C = malloc(size * sizeof(int*));
+
     for (int i = 0; i < size; i++) {
+        C[i] = malloc(size * sizeof(int));
         for (int j = 0; j < size; j++) {
             C[i][j] = A[i][j] - B[i][j];
         }
     }
+    return C;
 }
 
 // Functie pentru a inmulti doua matrice folosind algoritmul lui Strassen
@@ -103,10 +108,10 @@ void strassenMultiply(int **A, int **B, int **C, int size) {
     strassenMultiply(subtractMatrices(A12, A22, newSize), addMatrices(B21, B22, newSize), M7, newSize);
 
     // Calculul submatricilor rezultat
-    addMatrices(subtractMatrices(addMatrices(M1, M4, newSize), M5, newSize), M7, C11, newSize);
-    addMatrices(M3, M5, C12, newSize);
-    addMatrices(M2, M4, C21, newSize);
-    addMatrices(subtractMatrices(addMatrices(M1, M3, newSize), M2, newSize), M6, C22, newSize);
+    C11 = addMatrices(subtractMatrices(addMatrices(M1, M4, newSize), M5, newSize), M7, newSize);
+    C12 = addMatrices(M3, M5, newSize);
+    C21 = addMatrices(M2, M4, newSize);
+    C22 = addMatrices(subtractMatrices(addMatrices(M1, M3, newSize), M2, newSize), M6, newSize);
 
     // Copierea rezultatului in matricea de rezultate
     for (int i = 0; i < newSize; i++) {
@@ -131,70 +136,4 @@ void strassenMultiply(int **A, int **B, int **C, int size) {
     free(C11); free(C12); free(C21); free(C22);
     free(M1); free(M2); free(M3); free(M4);
     free(M5); free(M6); free(M7);
-}
-
-// Functie pentru a afisa o matrice
-void printMatrix(int **matrix, int size) {
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            printf("%d ", matrix[i][j]);
-        }
-        printf("\n");
-    }
-}
-
-// Functie principala
-int main() {
-    int size;
-
-    // Citeste dimensiunea matricelor de la utilizator
-    printf("Introduceti dimensiunea matricelor: ");
-    scanf("%d", &size);
-
-    // Alocare de memorie pentru matricile A, B si C
-    int **A = (int **)malloc(size * sizeof(int *));
-    int **B = (int **)malloc(size * sizeof(int *));
-    int **C = (int **)malloc(size * sizeof(int *));
-    
-    for (int i = 0; i < size; i++) {
-        A[i] = (int *)malloc(size * sizeof(int));
-        B[i] = (int *)malloc(size * sizeof(int));
-        C[i] = (int *)malloc(size * sizeof(int));
-    }
-
-    // Citirea matricelor A si B de la utilizator
-    printf("Introduceti matricea A:\n");
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            printf("Introduceti elementul [%d][%d]: ", i + 1, j + 1);
-            scanf("%d", &A[i][j]);
-        }
-    }
-
-    printf("Introduceti matricea B:\n");
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            printf("Introduceti elementul [%d][%d]: ", i + 1, j + 1);
-            scanf("%d", &B[i][j]);
-        }
-    }
-
-    // Calculul inmultirii matricelor folosind algoritmul lui Strassen
-    strassenMultiply(A, B, C, size);
-
-    // Afisarea matricei rezultat
-    printf("Matricea rezultat:\n");
-    printMatrix(C, size);
-
-    // Eliberarea memoriei alocate pentru matrici
-    for (int i = 0; i < size; i++) {
-        free(A[i]);
-        free(B[i]);
-        free(C[i]);
-    }
-    free(A);
-    free(B);
-    free(C);
-
-    return 0;
 }
