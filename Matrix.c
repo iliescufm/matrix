@@ -10,7 +10,7 @@ v1.2
 #include <string.h>
 #include <stdlib.h>
 
-# define D 0
+# define D 1
 
 int* initAllocVector(int z, int v)
 {
@@ -39,19 +39,42 @@ int* echoVector(int* b, int z)
 }
 
 
+// int* resizeVector(int* a, int z, int nz)
+// {
+// 	if (D) printf("resizeVector %d-->%d\n",z,nz);
+// 	int* t;
+// 	int i,x1,x2;
+// 	t = malloc(nz * sizeof(int));
+
+// 	if (z < nz) {x1 = z; x2 = nz;} else {x1 = nz; x2 = 0;}
+
+// 	for (i = 0; i < x1; i++) t[i] = a[i];
+// 	for (i = x1; i < x2; i++) t[i] = -1;
+// 	free(a);
+// 	return t;
+// }
+
 int* resizeVector(int* a, int z, int nz)
 {
 	if (D) printf("resizeVector %d-->%d\n",z,nz);
 	int* t;
-	int i,x1,x2;
-	t = malloc(nz * sizeof(int));
+	t = realloc(a, (nz) * sizeof(int));
+	if (t) a = t;
+	else printf ("Error-resizeVector 'realloc(a, (nz) * sizeof(int))'\n");
 
-	if (z < nz) {x1 = z; x2 = nz;} else {x1 = nz; x2 = 0;}
+	return a;
+}
 
-	for (i = 0; i < x1; i++) t[i] = a[i];
-	for (i = x1; i < x2; i++) t[i] = -1;
-	free(a);
-	return t;
+
+void printVectorAddr(int *a, int n)
+{
+	if (D) printf("printVectorAddr %d\n",n);
+	int i;
+	for (i=0; i<n; i++)
+	{
+		printf(" %2d [%p]",a[i],(void *)&a[i]);
+	}
+	printf("\n");
 }
 
 void printVector(int *a, int n)
@@ -60,7 +83,7 @@ void printVector(int *a, int n)
 	int i;
 	for (i=0; i<n; i++)
 	{
-		printf("%2d [%x]",a[i],&a[i]);
+		printf(" %2d", a[i]);
 	}
 	printf("\n");
 }
@@ -255,4 +278,13 @@ int **stringToMatrix(char *mx, int *rows, int *columns) {
     }
 
     return matrix;
+}
+
+int* stringToVector(char *mx, int *columns) 
+{
+
+	int rows;
+	int **a = stringToMatrix(mx, &rows, columns);
+	return a[0];
+
 }
