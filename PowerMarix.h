@@ -1,1 +1,0 @@
-void powerMatrix(int **matrix, int size, int exponent);
