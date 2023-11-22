@@ -17,6 +17,9 @@ int main() {
     char strA[] = "-4 1 5 -2, -1 2 1 2, 3 0 5 -1, 2 1 1 4";
     char strB[] = "2 -2 -4 -1, 0 2 0 3, 1 3 -3 -2, 1 -4 -5 -2";
 
+    // char strA[] = "1 1, 2 2";
+    // char strB[] = "3 3, 4 4";
+
     int la,ca;
     int** a = stringToMatrix(strA,&la,&ca);
 
@@ -25,9 +28,9 @@ int main() {
 
     int l = la;
 
-    int **c = initAllocMatrix(l,l,0);
+    int **c;
    
-    strassenMultiply(a, b, c, l);
+    c = strassen(a, la, ca, b, lb, cb);
 
     printMatrix(c, l, l);
 

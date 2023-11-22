@@ -1,16 +1,12 @@
-/*
-Matrix.c
-v1.2
-
-
-
-*/
+/* Matrix.c 
+   v1.3    */
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
 # define D 1
+# define MODULO 10007
 
 int* initAllocVector(int z, int v)
 {
@@ -37,21 +33,6 @@ int* echoVector(int* b, int z)
 	return a;
 
 }
-
-// int* resizeVector(int* a, int z, int nz)
-// {
-// 	if (D) printf("resizeVector %d-->%d\n",z,nz);
-// 	int* t;
-// 	int i,x1,x2;
-// 	t = malloc(nz * sizeof(int));
-
-// 	if (z < nz) {x1 = z; x2 = nz;} else {x1 = nz; x2 = 0;}
-
-// 	for (i = 0; i < x1; i++) t[i] = a[i];
-// 	for (i = x1; i < x2; i++) t[i] = -1;
-// 	free(a);
-// 	return t;
-// }
 
 int* resizeVector(int* a, int z, int nz)
 {
@@ -126,7 +107,7 @@ int sumMatrix(int **a, int nl, int nc)
 		}
 	}
 	printf("%d\n",s);
-	return s;
+	return s % MODULO;
 }
 
 
@@ -265,6 +246,7 @@ int** readMatrixforKeyboard(int nl, int nc)
 		a[i] = malloc(nc * sizeof(int));
 		for (j = 0; j < nc; j++){
 			scanf("%d",&a[i][j]);
+			a[i][j] = a[i][j] % MODULO;
 		}
 	}
 	return a;

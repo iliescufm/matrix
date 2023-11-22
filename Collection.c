@@ -76,6 +76,22 @@ int*** addMatrixtoCollection(int*** q, int* z, int* ql, int* qc, int** b, int l,
 	return a;
 }
 
+int*** appendMatrixtoCollection(int*** q, int* size, int* capa, int* ql, int* qc, int** b, int l, int c)
+{
+	if (size == *capa) {
+			ql = resizeVector(ql, *capa, *capa * 2);
+			qc = resizeVector(qc, *capa, *capa * 2);
+			q = resizeCollectionCapacity(q, *capa, *capa * 2, ql, qc);
+			*capa = *capa * 2;
+		}
+
+	q = addMatrixtoCollection(q, &size, ql, qc, b, ql[*size], qc[*size]);	
+
+	return q;
+}
+
+
+
 int*** sortCollection(int ***q, int z, int *ql, int *qc, int *top)
 {
     if (D) printf("sortCollection #%d \n", z);
@@ -161,10 +177,14 @@ int*** deleteMatrixfromCollection(int*** q, int* z, int* ql, int* qc, int ki)
 
 	int* qlo = echoVector(ql,*z);
 	int* qco = echoVector(qc,*z);
-	int* qlk = realloc(ql, (*z - 1) * sizeof(int));
-	int* qck = realloc(qc, (*z - 1) * sizeof(int));
 
-	a = malloc((*z -1) * sizeof(int**));
+	int nz = 2;
+	if (*z > 2) nz = *z;
+
+	int* qlk = realloc(ql, (nz - 1) * sizeof(int));
+	int* qck = realloc(qc, (nz - 1) * sizeof(int));
+
+	a = malloc((nz -1) * sizeof(int**));
 	for (k = 0; k < *z; k++) {
 		if (k != ki) { 
 			qlk[ka] = ql[k];
@@ -181,9 +201,9 @@ int*** deleteMatrixfromCollection(int*** q, int* z, int* ql, int* qc, int ki)
 
 	ql = qlk;
 	qc = qck;
-
-	freeCollection(q,*z,qlo,qco);
-	*z = *z - 1;
-	return a;
+		
+	if (*z > 1) freeCollection(q,*z,qlo,qco);
+	if (*z > 0) { *z = *z - 1; }
+	if (*z > 1)	{ return a; }
+	else return q;
 }
-

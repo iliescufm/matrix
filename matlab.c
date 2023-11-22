@@ -1,130 +1,157 @@
-/*
-matlab.c
-v1.3
-
-gcc matlab.c Radix.c Exponent.c Matrix.c Collection.c
-
-*/
-
-
-
+//gcc matlab.c Radix.c PowerMatrix.c Strassen.c Matrix.c MultiplicateMatrix.c Collection.c Validate.c
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "Validate.h"
 #include "Matrix.h"
 #include "Collection.h"
 #include "Radix.h"
 #include "Exponent.h"
 #include "PowerMatrix.h"
-
-
-void pl(){
-	printf("-----\n");
-}
-
+#include "Strassen.h"
+#include "MultiplicateMatrix.h"
+# define D 1 // debug messages: 0 - no, 1 -yes 
+# define P 1 // command prompt: 0 - no, 1 -yes
+ 
 int main(void)
 {
-	int nx,ny,nz,i,j,k;
+	int size = 0; // nr de matrici adaugate in colectie
+    int capa = 1; // capacitatea colectiei
+	int *ql; // vectorul ce retine dimensiunile liniilor
+	int *qc;
+	int *sum = malloc(capa * sizeof(int)); // suma fiecarei matrici din colectie
+	int *top = malloc(capa * sizeof(int));// clasament cu pozitia din colectie
+    // folosim un resizable array pentru a reprezenta o colectie de matrici
+    int ***collection = malloc(capa * sizeof(int**));
+    int **matrix; // matricile din colectie
 	int **b;
-	
-	nx = 15;
-	ny = 3;
-
-	nz = 2; //collection capacity
-
-	int *ql = malloc(nz * sizeof(int)); //numar de linii ale matricii din colectie
-	int *qc = malloc(nz * sizeof(int)); //numar de coloane ale matricii din colectie
-    int	***q = malloc(nz * sizeof(int**));
-	int *sum = malloc(nz * sizeof(int)); // suma fiecarei matrici din colectie
-	int *top = malloc(nz * sizeof(int));// clasament cu pozitia din colectie
-
-
-	int z=0;   //collection size;
-    b = initAllocMatrix(2,2,10);
-	q = addMatrixtoCollection(q, &z, ql, qc, b, 2, 2);
-	freeMatrix(b,ql[z]);
-
-	powerMatrix(q[0], ql[0], 2);
-
-    b = initAllocMatrix(4,4,1);
-	q = addMatrixtoCollection(q, &z, ql, qc, b, 4, 4);
-	freeMatrix(b,ql[z]);
-
-	powerMatrix(q[1], ql[1], 2);
-
-	b = initAllocMatrix(3,3,1);
-	q = addMatrixtoCollection(q, &z, ql, qc, b, 3, 3);
-	freeMatrix(b,ql[z]);
-
-	powerMatrix(q[1], ql[1], 2);
-
-	printVector(ql,z);
-	printVector(qc,z);
-    q = deleteMatrixfromCollection(q, &z, ql, qc, 0);
-	printVector(ql,z);
-	printVector(qc,z);
-
-    printCollectionandSum(q,z,ql,qc,sum);
-
-
-	// b = initAllocMatrix(3,2,20);
-	// sum[z] = sumMatrix(b,3,2);
-	// q = addMatrixtoCollection(q, &z, ql, qc, b, 3, 2);
-	// freeMatrix(b,ql[z]);
-
-    // q = resizeCollectionCapacity(q,nz,nz*2,ql,qc);
-	// nz = nz * 2;
-
-	// b = initAllocMatrix(5,5,0);
-	// sum[z] = sumMatrix(b,5,5);
-	// q = addMatrixtoCollection(q, &z, ql, qc, b, 5, 5);
-	// freeMatrix(b,ql[z]);
-
-	// // b = initAllocMatrix(3,7,2);
-	// // q = replaceMatrixinCollection(q, z, ql, qc, 0, b, 3, 7);
-	// // sum[0] = sumMatrix(b,3,7);
-	// // freeMatrix(b,ql[z]);
-
-	// int bl;
-	// int bc;
-	// char m1[] = "1 0 1 1,1 1 1 1, 1 0 2 2";
-	// b = stringToMatrix(m1, &bl, &bc);
-	// sum[z] = sumMatrix(b, bl, bc);
-	// q = addMatrixtoCollection(q, &z, ql, qc, b, bl, bc);
-
-	// int li[] = {0};
-	// int lc[] = {0};
-	// q[2] = cutMatrix(q[2],&ql[2],&qc[2],1,li,1,lc);
-	// //q = replaceMatrixinCollection(q, z, ql, qc, 2, b, bl, bc);
-	// sum[2] = sumMatrix(q[2], ql[2], qc[2]);
-	// //freeMatrix(b,bl);
-
-
-	// int li1[] = {0,1};
-	// int lc1[] = {0,1};
-	// q[1] = cutMatrix(q[1],&ql[1],&qc[1],2,li1,2,lc1);
-	// //q = replaceMatrixinCollection(q, z, ql, qc, 2, b, bl, bc);
-	// sum[1] = sumMatrix(q[1], ql[1], qc[1]);
-	// //freeMatrix(b,bl);
-
-	// printVector(ql,z);
-	// printVector(qc,z);
-
-	// q = deleteMatrixfromCollection(q, &z, ql, qc, 1);
-
-
-	// printVector(ql,z);
-	// printVector(qc,z);
-
-
-    // printCollectionandSum(q,z,ql,qc,sum);
-	// top = sortVector(sum,z);
-	// q = sortCollection(q,z,ql,qc,top);
-
-    // printCollectionandSum(q,z,ql,qc,sum);
-
-	freeCollection(q,z,ql,qc);
-
-return 0;
+    ql = malloc(capa * sizeof(int));
+    qc = malloc(capa * sizeof(int));
+	int nl, nc, k, k1, k2, p;
+ 
+ 	while(1) {
+		int ok = 0;
+		char c;
+		if (c != '\n' && c != '\r') if (P) printf("> ");
+			scanf("%c", &c);
+ 
+		if (c == 'L') {
+			ok = 1;
+			if (D) printf("Încărcarea în memorie a unei matrice\n");
+			scanf("%d%d", &nl, &nc);
+ 
+			if (size == capa) {
+				ql = resizeVector(ql, capa, capa * 2);
+				qc = resizeVector(qc, capa, capa * 2);
+				collection = resizeCollectionCapacity(collection, capa, capa * 2, ql, qc);
+				capa = capa * 2;
+			}
+			//read matrix from stdin
+			ql[size] = nl;
+			qc[size] = nc;
+			if (D) printf("nl %d, nc %d\n", ql[size], qc[size]);
+			b = readMatrixforKeyboard(ql[size],qc[size]);
+			collection = addMatrixtoCollection(collection, &size, ql, qc, b, ql[size], qc[size]);	
+			freeMatrix(b, ql[size - 1]);
+			//
+ 
+		}
+		if (c == 'D') {
+			ok = 1;
+			if (D) printf("Determinarea dimensiunilor unei matrice\n");
+			scanf("%d", &k);
+			if (validateIndex(k, size)) { printf("%d %d\n", ql[k], qc[k]); 	}
+		}
+		if (c == 'P') {
+			ok = 1;
+			if (D) printf("Afisarea unei matrice\n");
+			scanf("%d", &k);
+			if (validateIndex(k, size)) { printMatrix(collection[k], ql[k], qc[k]); }
+		}
+		if (c == 'C') {
+			ok = 1;
+			if (D) printf("Redimensionarea unei matrice\n");
+			scanf("%d", &k);
+			if (validateIndex(k, size)) {
+				int lx, cx;
+				scanf("%d", &lx); // nr de linii
+				int li[lx];
+				for(int i = 0; i < lx; i++) { scanf("%d", &li[i]);	}
+				scanf("%d", &cx); // nr de coloane
+				int ci[cx];
+				for(int i = 0; i < cx; i++) { scanf("%d", &ci[i]);	}
+				collection[k] = cutMatrix(collection[k], &ql[k], &qc[k], lx, li, cx, ci);
+ 			}
+		}
+		if (c == 'M') {
+			ok = 1;
+			if (D) printf("Înmultirea a două matrice\n");
+			scanf("%d%d", &k1, &k2);
+			if (validateIndex(k1, size) && validateIndex(k2, size)) {
+ 				if(multiplicateMatrix(collection[k1], ql[k1], qc[k1], collection[k2], ql[k2], qc[k2]) != 0) {
+ 					matrix = multiplicateMatrix(collection[k1], ql[k1], qc[k1], collection[k2], ql[k2], qc[k2]);
+					nl = ql[k1];
+					nc = qc[k2];
+					if (size == capa) {
+						ql = resizeVector(ql, capa, capa * 2);
+						qc = resizeVector(qc, capa, capa * 2);
+						collection = resizeCollectionCapacity(collection, capa, capa * 2, ql, qc);
+						capa = capa * 2;
+					}
+					ql[size] = nl;
+					qc[size] = nc;
+					collection = addMatrixtoCollection(collection, &size, ql, qc, matrix, ql[size], qc[size]);	
+					freeMatrix(matrix, ql[size - 1]);
+				}
+			}
+		}
+		if (c == 'O') {
+			ok = 1;
+			if (D) printf("Sortarea matricelor\n");
+			for(int i = 0; i < size; i++) { sum[i] = sumMatrix(collection[i], ql[i], qc[i]); }
+			top = sortVector(sum, size);
+			collection = sortCollection(collection, size, ql, qc, top);
+		}
+		if (c == 'T') {
+			ok = 1;
+			if (D) printf("Transpunerea unei matrice\n");
+			scanf("%d", &k);
+			if (validateIndex(k, size)) {
+				collection[k] = transposeMatrix(collection[k], &ql[k], &qc[k]);
+			}
+		}
+		if (c == 'R') {
+			ok = 1;
+			if (D) printf("Ridicarea unei matrice la o putere în timp logaritmic\n");
+			scanf("%d%d", &k, &p);
+			if (validateIndex(k, size)) {
+					powerMatrix(collection[k], ql[k], p);
+				}
+		}
+		if (c == 'F') { ok = 1;
+			if (D) printf("Eliberarea memoriei unei matrice\n");
+			scanf("%d", &k);
+			if (validateIndex(k, size)) {
+				collection = deleteMatrixfromCollection(collection, &size, ql, qc, k);
+			}
+		}
+		if (c == 'Q') {	ok = 1; 
+			if (D) printf("Eliberarea tuturor resurselor\n");
+			// freeCollection(collection, size, ql, qc);
+			break;
+		}
+		if (c == 'S') { ok = 1;
+			if (D) printf("Înmultirea matricelor folosind algoritmul lui Strassen\n");
+			scanf("%d%d", &k1, &k2);
+			if (validateIndex(k1, size) && validateIndex(k2, size)) {
+				int **mp = strassen(collection[k1],ql[k1],qc[k1],collection[k2],ql[k2],qc[k2]);
+				if (mp) printMatrix(mp,ql[k1],qc[k1]); 
+			}
+		}
+		if (ok == 0) if (c != '\n' && c != '\r') printf("Unrecognized command\n");
+	}
+	printCollection(collection, size, ql, qc); 
+	freeCollection(collection, size, ql, qc);
+ 
+	return 0;
 }
-

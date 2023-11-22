@@ -1,4 +1,7 @@
 #include <stdlib.h>
+#include <stdio.h>
+
+#define MAXPOW 1000000000;
 
 // Functie pentru a multiplica doua matrice
 void multiplyMatrices(int **A, int **B, int **result, int size) {
@@ -24,8 +27,19 @@ void copyMatrix(int **source, int **destination, int size) {
 }
 
 // Functie pentru a ridica o matrice la o putere
-void powerMatrix(int **matrix, int size, int exponent) {
+int powerMatrix(int **matrix, int l, int c, int exponent) {
     // Matricea rezultat este initializata cu matricea identitate
+	if (exponent < 0) { 
+        printf("Power should be positive\n");
+        return 1;
+		}
+    if (l !=c ) {
+        printf("Cannot perform matrix multiplication\n");
+        return 1;
+    }
+
+    int size = l;
+    exponent = exponent % MAXPOW;
     int **temp = (int **)malloc(size * sizeof(int *));
 	int **result = (int **)malloc(size * sizeof(int *));
     for (int i = 0; i < size; i++) {
@@ -39,6 +53,7 @@ void powerMatrix(int **matrix, int size, int exponent) {
                 temp[i][j] = 0;
             }
         }
+        return 0;
     }
 
     // Ridicarea matricei la putere folosind metoda exponențială logaritmică

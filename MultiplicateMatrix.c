@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
 #define MODULO 10007
 
 // getRow(matrix, index, nr columns)
