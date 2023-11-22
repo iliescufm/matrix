@@ -1,9 +1,10 @@
 /*
 sortvector.c
-v 1.0
+v1.0
+
+Example: sortVector
 
 gcc sortvector.c Radix.c
-
 */
 
 #include <stdio.h>

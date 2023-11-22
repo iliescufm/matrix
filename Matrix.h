@@ -7,6 +7,8 @@ int* resizeVector(int*, int, int);
 void printVector(int *, int);
 // printVector(vector, size) 
 
+void printVectorAddr(int *a, int n);
+
 int* echoVector(int*, int);
 //vector = echoVector(vector, size)
 
@@ -14,6 +16,9 @@ int sumMatrix(int **a, int nl, int nc);
 // sum = sumMatrix (matrix, lines, colums);
 
 void printMatrix(int **, int, int);
+// printMatrix(matrix, lines, columns)
+
+void printMatrixAddr(int **, int, int);
 // printMatrix(matrix, lines, columns)
 
 int** transposeMatrix(int**, int*, int*);
@@ -34,3 +39,7 @@ int** initAllocMatrix(int , int, int);
 
 // matrix = stringToMatrix(string, rows-pointer, columns-pointer)
 int **stringToMatrix(char *mx, int *rows, int *columns);
+
+int* stringToVector(char *mx, int *columns);
+
+int** readMatrixforKeyboard(int nl, int nc);

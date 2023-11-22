@@ -4,6 +4,7 @@ v1.0
 
 gcc realloc.c Matrix.c 
 
+Example: realloc
 */
 
 #include <stdio.h>

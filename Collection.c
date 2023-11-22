@@ -153,20 +153,20 @@ int*** replaceMatrixinCollection(int*** q, int nw, int* ql, int* qc, int z, int*
 	return a;
 }
 
-int*** deleteMatrixfromCollection(int*** q, int* nw, int* ql, int* qc, int z)
+int*** deleteMatrixfromCollection(int*** q, int* z, int* ql, int* qc, int ki)
 {
-    if (D) printf("deleteMatrixfromCollection #%d %d\n", *nw, z);
+    if (D) printf("deleteMatrixfromCollection #%d %d\n", *z, ki);
 	int ***a;
 	int i, j, k, ka =0;
 
-	int* qlo = echoVector(ql,*nw);
-	int* qco = echoVector(qc,*nw);
-	int* qlk = realloc(ql, (*nw - 1) * sizeof(int));
-	int* qck = realloc(qc, (*nw - 1) * sizeof(int));
+	int* qlo = echoVector(ql,*z);
+	int* qco = echoVector(qc,*z);
+	int* qlk = realloc(ql, (*z - 1) * sizeof(int));
+	int* qck = realloc(qc, (*z - 1) * sizeof(int));
 
-	a = malloc((*nw -1) * sizeof(int**));
-	for (k = 0; k < *nw; k++) {
-		if (k != z) { 
+	a = malloc((*z -1) * sizeof(int**));
+	for (k = 0; k < *z; k++) {
+		if (k != ki) { 
 			qlk[ka] = ql[k];
 			qck[ka] = qc[k];
 		    a[ka]=malloc(ql[k] * sizeof(int*));
@@ -178,12 +178,12 @@ int*** deleteMatrixfromCollection(int*** q, int* nw, int* ql, int* qc, int z)
 		ka++;
 		}
 	}
-	printf("ql,qc\n");
-	printVector(qlo,*nw);
-	printVector(qco,*nw);
 
-	//freeCollection(q,*nw,ql,qc);
-	*nw = *nw - 1;
+	ql = qlk;
+	qc = qck;
+
+	freeCollection(q,*z,qlo,qco);
+	*z = *z - 1;
 	return a;
 }
 

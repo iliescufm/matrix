@@ -38,7 +38,6 @@ int* echoVector(int* b, int z)
 
 }
 
-
 // int* resizeVector(int* a, int z, int nz)
 // {
 // 	if (D) printf("resizeVector %d-->%d\n",z,nz);
@@ -64,7 +63,6 @@ int* resizeVector(int* a, int z, int nz)
 
 	return a;
 }
-
 
 void printVectorAddr(int *a, int n)
 {
@@ -101,6 +99,20 @@ void printMatrix(int **a, int nl, int nc)
 
 	}
 }
+
+void printMatrixAddr(int **a, int nl, int nc)
+{
+	int i,j;
+	for (i=0; i<nl; i++)
+	{
+		for (j=0; j<nc; j++){
+			printf("%3d [%p]",a[i][j],(void *)&a[i][j]);
+		}
+		printf("\n");
+
+	}
+}
+
 
 int sumMatrix(int **a, int nl, int nc)
 {
@@ -221,7 +233,6 @@ void addMatrixtoCube(int ***c, int **a, int k, int nl, int nc)
 		}
 }
 
-
 int** initAllocMatrix(int nl, int nc, int v)
 {
 	int **a;
@@ -240,6 +251,25 @@ int** initAllocMatrix(int nl, int nc, int v)
 	}
 	return a;
 }
+
+int** readMatrixforKeyboard(int nl, int nc)
+{
+	if (D) printf("readMatrixforKeyboard %dx%d\n",nl,nc);
+	int **a;
+	int i,j;
+
+	a = malloc(nl * sizeof(int*));
+
+	for (i = 0; i < nl; i++)
+	{
+		a[i] = malloc(nc * sizeof(int));
+		for (j = 0; j < nc; j++){
+			scanf("%d",&a[i][j]);
+		}
+	}
+	return a;
+}
+
 
 int **stringToMatrix(char *mx, int *rows, int *columns) {
     // Count the number of rows
