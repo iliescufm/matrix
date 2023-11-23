@@ -19,8 +19,8 @@ int main(void)
     int capa = 1; // capacitatea colectiei
 	int *ql; // vectorul ce retine dimensiunile liniilor
 	int *qc;
-	int *sum = malloc(capa * sizeof(int)); // suma fiecarei matrici din colectie
-	int *top = malloc(capa * sizeof(int));// clasament cu pozitia din colectie
+	int *sum = malloc(20 * sizeof(int)); // suma fiecarei matrici din colectie
+	int *top = malloc(20 * sizeof(int));// clasament cu pozitia din colectie
     // folosim un resizable array pentru a reprezenta o colectie de matrici
     int ***collection = malloc(capa * sizeof(int**));
     int **matrix; // matricile din colectie
@@ -34,27 +34,37 @@ int main(void)
 		char c;
 		if (c != '\n' && c != '\r') if (P) printf("> ");
 			scanf("%c", &c);
+		
+		if (c == 'a') {
+			ok = D;
+			if (D) printf("Collection Size #%d Capacity /%d/ Address [%p]\n", size, capa, (void *)collection);
+		}
  
+		if (c == 'q') {
+			ok = D;
+			if (D){
+				printf("Collection Vectors\n");
+				infoVector("ql: ",ql,size,0);
+				infoVector("qc: ",qc,size,0);
+			}
+		}
+
+		if (c == 'p') {
+			ok = D;
+			if (D) printCollection(collection,size,ql,qc);
+		}
+
 		if (c == 'L') {
 			ok = 1;
 			if (D) printf("Încărcarea în memorie a unei matrice\n");
-			scanf("%d%d", &nl, &nc);
- 
-			if (size == capa) {
-				ql = resizeVector(ql, capa, capa * 2);
-				qc = resizeVector(qc, capa, capa * 2);
-				collection = resizeCollectionCapacity(collection, capa, capa * 2, ql, qc);
-				capa = capa * 2;
-			}
-			//read matrix from stdin
-			ql[size] = nl;
-			qc[size] = nc;
-			if (D) printf("nl %d, nc %d\n", ql[size], qc[size]);
+			scanf("%d%d", &ql[size], &qc[size]);
 			b = readMatrixforKeyboard(ql[size],qc[size]);
-			collection = addMatrixtoCollection(collection, &size, ql, qc, b, ql[size], qc[size]);	
-			freeMatrix(b, ql[size - 1]);
-			//
- 
+			if (size == capa){
+				ql = realloc(ql, 2 * capa * sizeof(int));
+				qc = realloc(qc, 2 * capa * sizeof(int));
+			}
+
+			collection = appendMatrixtoCollection(collection, &size, &capa, ql, qc, b, ql[size], qc[size]);	
 		}
 		if (c == 'D') {
 			ok = 1;
@@ -87,11 +97,16 @@ int main(void)
 			ok = 1;
 			if (D) printf("Înmultirea a două matrice\n");
 			scanf("%d%d", &k1, &k2);
+
+			//validarea de mutat in functia 
 			if (validateIndex(k1, size) && validateIndex(k2, size)) {
  				if(multiplicateMatrix(collection[k1], ql[k1], qc[k1], collection[k2], ql[k2], qc[k2]) != 0) {
  					matrix = multiplicateMatrix(collection[k1], ql[k1], qc[k1], collection[k2], ql[k2], qc[k2]);
 					nl = ql[k1];
 					nc = qc[k2];
+
+					//TODO
+					//nu mai este necesar, appendMatrixtoCollection dubleaza capacitatea daca nu mai e loc
 					if (size == capa) {
 						ql = resizeVector(ql, capa, capa * 2);
 						qc = resizeVector(qc, capa, capa * 2);
@@ -100,6 +115,11 @@ int main(void)
 					}
 					ql[size] = nl;
 					qc[size] = nc;
+					
+					//TODO
+					//de folosit noua functie de mai jos pentru adaugarea in colectie
+					//collection = appendMatrixtoCollection(collection, &size, &capa, ql, qc, mp,ql[k1],qc[k1]);
+
 					collection = addMatrixtoCollection(collection, &size, ql, qc, matrix, ql[size], qc[size]);	
 					freeMatrix(matrix, ql[size - 1]);
 				}
@@ -145,7 +165,12 @@ int main(void)
 			scanf("%d%d", &k1, &k2);
 			if (validateIndex(k1, size) && validateIndex(k2, size)) {
 				int **mp = strassen(collection[k1],ql[k1],qc[k1],collection[k2],ql[k2],qc[k2]);
-				if (mp) printMatrix(mp,ql[k1],qc[k1]); 
+				if (D) printMatrix(mp,ql[k1],qc[k1]);
+				if (size == capa){
+					ql = realloc(ql, 2 * capa * sizeof(int));
+					qc = realloc(qc, 2 * capa * sizeof(int));
+					}
+				collection = appendMatrixtoCollection(collection, &size, &capa, ql, qc, mp,ql[k1],qc[k1]);
 			}
 		}
 		if (ok == 0) if (c != '\n' && c != '\r') printf("Unrecognized command\n");

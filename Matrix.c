@@ -6,6 +6,7 @@
 #include <stdlib.h>
 
 # define D 1
+# define DD 0
 # define MODULO 10007
 
 int* initAllocVector(int z, int v)
@@ -36,7 +37,7 @@ int* echoVector(int* b, int z)
 
 int* resizeVector(int* a, int z, int nz)
 {
-	if (D) printf("resizeVector %d-->%d\n",z,nz);
+	if (DD) printf("resizeVector %d-->%d\n",z,nz);
 	int* t;
 	t = realloc(a, (nz) * sizeof(int));
 	if (t) a = t;
@@ -45,13 +46,36 @@ int* resizeVector(int* a, int z, int nz)
 	return a;
 }
 
+int* reallocVector(int* a, int nz)
+{
+	if (DD) printf("reallocVector -->%d\n",nz);
+	int* t;
+	t = realloc(a, (nz) * sizeof(int));
+	if (t) a = t;
+	else printf ("Error-reallocVector 'realloc(a, (nz) * sizeof(int))'\n");
+
+	return a;
+}
+
+
 void printVectorAddr(int *a, int n)
 {
-	if (D) printf("printVectorAddr %d\n",n);
 	int i;
 	for (i=0; i<n; i++)
 	{
 		printf(" %2d [%p]",a[i],(void *)&a[i]);
+	}
+	printf("\n");
+}
+
+void infoVector(char* m, int *a, int n, int addr)
+{
+	if (D) printf("infoVector %s /%d/\n",m,n);
+	int i;
+	for (i=0; i<n; i++)
+	{
+		if (addr) printf(" %2d [%p]",a[i],(void *)&a[i]);
+		else printf(" %2d",a[i]);
 	}
 	printf("\n");
 }
@@ -69,7 +93,7 @@ void printVector(int *a, int n)
 
 void printMatrix(int **a, int nl, int nc)
 {
-    if (D) printf("printMatrix %dx%d\n",nl,nc);
+    if (D) printf("printMatrix [%p] %dx%d\n", (void*)a, nl,nc);
 	int i,j;
 	for (i=0; i<nl; i++)
 	{
@@ -113,7 +137,7 @@ int sumMatrix(int **a, int nl, int nc)
 
 void freeMatrix(int **a, int nl)
 {
-    if (D) printf("freeMatrix %d\n",nl);
+    if (DD) printf("freeMatrix %d\n",nl);
 	for (int i=0; i<nl; i++)
 	{
 		free(a[i]);
@@ -235,7 +259,7 @@ int** initAllocMatrix(int nl, int nc, int v)
 
 int** readMatrixforKeyboard(int nl, int nc)
 {
-	if (D) printf("readMatrixforKeyboard %dx%d\n",nl,nc);
+	if (DD) printf("readMatrixforKeyboard %dx%d\n",nl,nc);
 	int **a;
 	int i,j;
 
@@ -245,8 +269,8 @@ int** readMatrixforKeyboard(int nl, int nc)
 	{
 		a[i] = malloc(nc * sizeof(int));
 		for (j = 0; j < nc; j++){
+			//TODO verificare interval [-10^4,10^4]
 			scanf("%d",&a[i][j]);
-			a[i][j] = a[i][j] % MODULO;
 		}
 	}
 	return a;

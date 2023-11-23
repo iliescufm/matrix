@@ -10,6 +10,8 @@ int*** addMatrixtoCollection(int***, int*, int*, int*, int**, int, int);
 // collection = resizeCollectionCapacity(collection, size, newsize, linesvector, columnsvector)
 int*** resizeCollectionCapacity(int***, int, int, int*, int*); 
 
+int*** appendMatrixtoCollection(int*** q, int* size, int* capa, int* ql, int* qc, int** b, int l, int c);
+
 // collection = replaceMatrixinCollection(colection, size, linesvector, columnsvector, index, matrix, lines, columns)
 int*** replaceMatrixinCollection(int***, int, int*, int*, int, int**, int, int);
 

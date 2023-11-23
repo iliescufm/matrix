@@ -3,7 +3,8 @@
 #include "Matrix.h"
 #include "Exponent.h"
 
-# define D 1
+# define D 1  //debug messages
+# define DD 1 //detail debug messages
 
 // printCollection (collection, size, linesvector, columnsvector)
 void printCollection(int ***a, int z, int *l, int *c)
@@ -37,7 +38,7 @@ void printCollectionandSum(int ***a, int z, int *l, int *c, int *sum)
 // freeCollection(collection, size, linesvector, columnsvector)
 void freeCollection(int ***a, int z, int *l, int *c)
 {
-    if (D) printf("freeCollection /%d/\n", z);
+    if (DD) printf("freeCollection /%d/\n", z);
 	int i,j,k;
 	for(k = 0; k < z; k++) {
 		for (i = 0; i < l[k]; i++)
@@ -75,21 +76,6 @@ int*** addMatrixtoCollection(int*** q, int* z, int* ql, int* qc, int** b, int l,
 	*z = nw;
 	return a;
 }
-
-int*** appendMatrixtoCollection(int*** q, int* size, int* capa, int* ql, int* qc, int** b, int l, int c)
-{
-	if (size == *capa) {
-			ql = resizeVector(ql, *capa, *capa * 2);
-			qc = resizeVector(qc, *capa, *capa * 2);
-			q = resizeCollectionCapacity(q, *capa, *capa * 2, ql, qc);
-			*capa = *capa * 2;
-		}
-
-	q = addMatrixtoCollection(q, &size, ql, qc, b, ql[*size], qc[*size]);	
-
-	return q;
-}
-
 
 
 int*** sortCollection(int ***q, int z, int *ql, int *qc, int *top)
@@ -143,6 +129,61 @@ int*** resizeCollectionCapacity(int ***w, int z, int nz, int *l, int *c)
     return a;
 }
 
+int*** appendMatrixtoCollection(int*** q, int* size, int* capa, int* ql, int* qc, int** b, int l, int c)
+{
+	int*** qq;
+	int nz = *capa;
+	int i,j,k;
+
+	if (*size < *capa) qq = q;
+	
+	if (*size == *capa)
+	{
+	if (DD) printf("--- start resizing capa ---\n");	
+
+		nz =  *capa * 2;
+		qq = malloc(nz * sizeof(int**));
+
+		for (k = 0; k < *size; k++) {	
+			if (DD) printf("%d [%p] ", k, (void*)&qq[k]);
+			qq[k]=malloc(ql[k] * sizeof(int*));
+			for (i = 0; i < ql[k]; i++) {
+				qq[k][i] = malloc(qc[k] * sizeof(int));
+				for (j = 0; j < qc[k]; j++){
+					qq[k][i][j] = q[k][i][j];
+				}
+			}
+		}
+		if (DD) printf("\n");
+
+	if (DD) printf("--- end resizing capa ---\n");	
+	}
+
+	k = *size;
+	qq[k]=malloc(l * sizeof(int*));
+	for (i = 0; i < c; i++) {
+		qq[k][i] = malloc(c * sizeof(int));
+			for (j = 0; j < c; j++){
+					qq[k][i][j] = b[i][j];
+			}
+		}
+
+	ql[k] = l;
+	qc[k] = c;
+
+	if (nz == *capa * 2){
+		if (DD) printf("--- double capacity ---\n");
+			*capa = nz;
+			freeCollection(q,*size,ql,qc);
+	}
+
+	freeMatrix(b, l);
+
+	*size = *size+1;
+	if (DD) if(q!=qq) printf("Old Collection Address [%p]\nNew Collection Address [%p]\n",(void*)q, (void*)qq);
+	return qq;
+}
+
 int*** replaceMatrixinCollection(int*** q, int nw, int* ql, int* qc, int z, int** b, int l, int c)
 {
     if (D) printf("replaceMatrixinCollection [%d] (%dx%d) --> (%dx%d)\n", z, ql[z], qc[z], l, c);
@@ -150,12 +191,12 @@ int*** replaceMatrixinCollection(int*** q, int nw, int* ql, int* qc, int z, int*
 	int i, j, k;
 	int qlk, qck;
 
-	a = malloc(nw * sizeof(int**));
+ 	a = malloc(nw * sizeof(int**));
 	for (k = 0; k < nw; k++) {
 		if (k == z) { qlk = l; } else { qlk = ql[k]; }
-		a[k]=malloc(qlk * sizeof(int*));
+ 		a[k]=malloc(qlk * sizeof(int*));
 		for (i = 0; i < qlk; i++) {
-			if (k == z) { qck = c; } else { qck = qc[k]; }
+		if (k == z) { qck = c; } else { qck = qc[k]; }
 			a[k][i] = malloc(qck * sizeof(int));
 			for (j = 0; j < qck; j++){
 				if (k != z) { a[k][i][j] = q[k][i][j];	}
@@ -181,7 +222,7 @@ int*** deleteMatrixfromCollection(int*** q, int* z, int* ql, int* qc, int ki)
 	int nz = 2;
 	if (*z > 2) nz = *z;
 
-	int* qlk = realloc(ql, (nz - 1) * sizeof(int));
+ 	int* qlk = realloc(ql, (nz - 1) * sizeof(int));
 	int* qck = realloc(qc, (nz - 1) * sizeof(int));
 
 	a = malloc((nz -1) * sizeof(int**));

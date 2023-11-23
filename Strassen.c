@@ -1,19 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "Matrix.h"
+#include "Validate.h"
 
-#define D 0
-#define MODULO 10007
-
-int moduloPositive(int r) {
-    if (r > MODULO) {
-
-        r = r % MODULO;
-        if (r < 0) r = r + MODULO;
-
-    }
-    return r;
-}
+#define D 1
 
 int** addMatrices(int **A, int **B, int size) {
     int** C = malloc(size * sizeof(int*));
@@ -21,7 +11,6 @@ int** addMatrices(int **A, int **B, int size) {
             C[i] = malloc(size * sizeof(int));
         for (int j = 0; j < size; j++) {
             C[i][j] = A[i][j] + B[i][j];
-            C[i][j] = moduloPositive( C[i][j] );
         }
     }
     return C;
@@ -35,7 +24,6 @@ int** subtractMatrices(int **A, int **B, int size) {
         C[i] = malloc(size * sizeof(int));
         for (int j = 0; j < size; j++) {
             C[i][j] = A[i][j] - B[i][j];
-            C[i][j] = moduloPositive( C[i][j] );
         }
     }
     return C;
@@ -46,8 +34,7 @@ void strassenMultiply(int **A, int **B, int **C, int size) {
     if (size == 1) {
         // Cazul de baza: inmultirea a doua matrice 1x1
         C[0][0] = A[0][0] * B[0][0];
-        C[0][0] = C[0][0] % MODULO;
-        C[0][0] = moduloPositive( C[0][0] );
+        C[0][0] = C[0][0];
         return;
     }
 
@@ -169,11 +156,17 @@ int** strassen(int **A, int la, int ca, int **B, int lb, int cb){
     }
     int size = la;
     int** C =  malloc(size * sizeof(int*));
-	for (int i = 0; i < size; i++) {
+    int i,j;
+	for (i = 0; i < size; i++) {
 		C[i] = malloc(size * sizeof(int));
 	}
-    if (D) printMatrixAddr(C,size,size);
-
     strassenMultiply(A, B, C, size);
+    if (D) printMatrix(C,size,size);
+
+    for (i = 0; i < size; i++){
+        for (j = 0; j < size; j++) {
+            C[i][j] = moduloPositive(C[i][j]);
+        }
+    }
 return C;
 }

@@ -4,10 +4,14 @@ int* initAllocVector(int z, int v);
 int* resizeVector(int*, int, int);
 // resized = resizeVector(vector, size, newsize)
 
+int* reallocVector(int* a, int nz);
+
 void printVector(int *, int);
 // printVector(vector, size) 
 
 void printVectorAddr(int *a, int n);
+void infoVector(char* m, int *a, int n, int addr);
+
 
 int* echoVector(int*, int);
 //vector = echoVector(vector, size)
