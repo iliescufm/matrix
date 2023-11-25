@@ -1,37 +1,44 @@
 /* Cube.c 
-   v1.0   */
+   v1.1
+   
+   gcc Cube.c Matrix.c -g -O0 -o cube
+   valgrind --leak-check=yes ./cube
+   
+   */
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "Matrix.h"
 
-int addMatrixtoCube(int ***q, int* nk, int* ql, int* qc, int **a, int l, int c)
+int addMatrixtoCube(int ***q, int* qz, int* ql, int* qc, int **a, int l, int c)
 {
-	if (*nk < 0) return 1;
+	if (*qz < 0) return 1;
     
     int i,j;
 
-    int nz = *nk + 1; 
+    int nz = *qz + 1; 
 
     if (nz > 1) {
         // ql = (void *)realloc(ql, nz * sizeof(int));
         // qc = (void *)realloc(qc, nz * sizeof(int));
-        // q = (void *)realloc(q, nz * sizeof(int***));
+
+        // q = (void *)realloc(q, nz * sizeof(int**));
+
     }
     
-    ql[*nk] = l;
-    qc[*nk] = c;
+    ql[*qz] = l;
+    qc[*qz] = c;
 
-    q[*nk] = malloc (l * sizeof(int*));
+    q[*qz] = malloc (l * sizeof(int*));
 	for (i = 0; i < l; i++)
 		{
-            q[*nk][i] = malloc( c * sizeof(int));		
+            q[*qz][i] = malloc( c * sizeof(int));		
 			for (j = 0; j < c; j++){
-				q[*nk][i][j] = a[i][j];
+				q[*qz][i][j] = a[i][j];
 			}
 		}
-    *nk = nz;
+    *qz = nz;
 
     return 0;
 
@@ -73,38 +80,32 @@ void freeCube(int ***q, int nk, int* ql, int* qc)
 
 int main()
 {
-    int*** q = malloc(1 * sizeof(int**));
-    int *ql = malloc(10 * sizeof(int));
-    int *qc = malloc(10 * sizeof(int));
-    int nk = 0;
+    int qk = 1; //capacity of cube
+    int*** q = malloc(qk * sizeof(int**));
+    int *ql = malloc(qk * sizeof(int));
+    int *qc = malloc(qk * sizeof(int));
+    int qz = 0; //size of cube
 
     int** a;
     int l,c;
 
-    l = 4;
-    c = 3;
-    a = initAllocMatrix(l,c,10);
-    addMatrixtoCube(q,&nk,ql,qc,a,l,c);
-    freeMatrix(a,l);
+    for (int u = 1; u < 11; u++) {
 
-    q = (void *)realloc(q, 3 * sizeof(int**));
+        l = 5 + (u % 2);
+        c = 3 + (u % 3);
+        a = initAllocMatrix(l,c,2*u);
+        addMatrixtoCube(q,&qz,ql,qc,a,l,c);
+        freeMatrix(a,l);
 
-
-    l = 3;
-    c = 7;
-    a = initAllocMatrix(l,c,20);
-    addMatrixtoCube(q,&nk,ql,qc,a,l,c);
-    freeMatrix(a,l);
-
-    l = 5;
-    c = 5;
-    a = initAllocMatrix(l,c,30);
-    addMatrixtoCube(q,&nk,ql,qc,a,l,c);
-    freeMatrix(a,l);
+        q = (void *)realloc(q, (qz+1) * sizeof(int**));
+        ql = realloc(ql, (qz+1) * sizeof(int));
+        qc = realloc(qc, (qz+1) * sizeof(int));
 
 
-    printCube(q,nk,ql,qc);
-    freeCube(q,nk,ql,qc);
+    }
+
+    printCube(q,qz,ql,qc);
+    freeCube(q,qz,ql,qc);
     free(ql);
     free(qc);
 }
