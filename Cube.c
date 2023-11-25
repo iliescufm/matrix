@@ -10,6 +10,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include "Matrix.h"
+#include "Collection.h"
+#include "Radix.h"
 
 int addMatrixtoCube(int ***q, int* qz, int* ql, int* qc, int **a, int l, int c)
 {
@@ -89,10 +91,10 @@ int main()
     int** a;
     int l,c;
 
-    for (int u = 1; u < 11; u++) {
+    for (int u = 0; u < 11; u++) {
 
-        l = 5 + (u % 2);
-        c = 3 + (u % 3);
+        l = 25 + (u % 2);
+        c = 2 + (u % 3);
         a = initAllocMatrix(l,c,2*u);
         addMatrixtoCube(q,&qz,ql,qc,a,l,c);
         freeMatrix(a,l);
@@ -104,9 +106,35 @@ int main()
 
     }
 
+
+    for (int u = 0; u < 11; u++) {
+        q[u] = transposeMatrix(q[u],&ql[u],&qc[u]);
+    }
+
+    int li[] = {1,2};
+    int ci[] = {1,2,3,4};
+    
+    q[8] = cutMatrix(q[8],&ql[8],&qc[8],2,li,4,ci);
+    q[10] = cutMatrix(q[10],&ql[10],&qc[10],2,li,4,ci);
+
+
+    //Sort
+    int* sum = malloc(qz * sizeof(int));
+    int* top = (int *)calloc(qz,sizeof(int));
+
+
+    for(int i = 0; i < qz; i++) { 
+        sum[i] = sumMatrix(q[i], ql[i], qc[i]); 
+        }
+		top = sortVector(sum, qz);
+	    q = sortCollection(q, qz, ql, qc, top);
+
+
     printCube(q,qz,ql,qc);
     freeCube(q,qz,ql,qc);
     free(ql);
     free(qc);
+    free(top);
+    free(sum);
 }
 

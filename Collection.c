@@ -41,11 +41,7 @@ void freeCollection(int ***a, int z, int *l, int *c)
     if (DD) printf("freeCollection /%d/\n", z);
 	int i,j,k;
 	for(k = 0; k < z; k++) {
-		for (i = 0; i < l[k]; i++)
-		{
-			free(a[k][i]);
-		}
-		free(a[k]);
+		freeMatrix(a[k],l[k]);
 	}
 	free(a);
 }

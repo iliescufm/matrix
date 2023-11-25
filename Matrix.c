@@ -155,7 +155,13 @@ int** cutMatrix(int** b, int* l, int* c, int nl, int *li, int nc, int *ci)
 	for (i = 0; i < nl; i++) {
 		a[i] = malloc(nc * sizeof(int));
 		for (j = 0; j < nc; j++){
-			a[i][j] = b[li[i]][ci[j]];
+			if ((li[i]+1 > *l) || (ci[j]+1 > *c)) {
+				printf("Invalid cut index. Return original matrix.\n");
+				freeMatrix(a,nl);
+				return b;
+			}
+			else
+				a[i][j] = b[li[i]][ci[j]];
 		}
 	}
 	freeMatrix(b, *l);
@@ -227,16 +233,7 @@ void printMatrixbyIndex(int **a, int k, int *ql, int *qc)
 }
 
 
-void addMatrixtoCube(int ***c, int **a, int k, int nl, int nc)
-{
-	int i,j;
-		for (i = 0; i < nl; i++)
-		{
-			for (j = 0; j < nc; j++){
-				c[k][i][j] = a[i][j];
-			}
-		}
-}
+
 
 int** initAllocMatrix(int nl, int nc, int v)
 {
