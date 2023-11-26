@@ -38,15 +38,41 @@ int multiplicateVectors(int* v, int* w, int n)
     return s;
 }
 //multiplicateMatrix(matrix1, nr rows, nr col, matrix2, nr rows, nr col)
-int** multiplicateMatrix(int** m, int x1, int y1, int** n, int x2, int y2)
+int multiplicateMatrix(int** m, int x1, int y1, int** n, int x2, int y2, int** a)
 {
     if(y1 != x2) {
 		printf("Cannot perform matrix multiplication\n");
-		return 0;
+		return 1;
 	} else {
-        int** a;
         int i,j;
 
+        for (i = 0; i < x1; i++) {
+            //
+        }
+        int* l;
+        int* c;
+        for (i = 0; i < x1; i++) {
+            l = getRow(m, i, y1);
+            for (j = 0; j < y2; j++){
+                c = getColumn(n, j, x2);
+                a[i][j] = multiplicateVectors(l, c, y1);
+                free(c);
+            }
+            free(l);
+        }
+    }
+    return 0;
+
+}
+
+int** newMatrixMultiplicate(int** m, int x1, int y1, int** n, int x2, int y2)
+{
+    int** a;
+    if(y1 != x2) {
+		printf("Cannot perform matrix multiplication\n");
+		return a;
+	} else {
+        int i,j;
         a = malloc(x1 * sizeof(int*));
         for (i = 0; i < x1; i++) {
             a[i] = malloc(y2 * sizeof(int));
@@ -62,7 +88,7 @@ int** multiplicateMatrix(int** m, int x1, int y1, int** n, int x2, int y2)
             }
             free(l);
         }
-	    return a;
     }
+    return a;
 
 }
