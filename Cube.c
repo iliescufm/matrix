@@ -1,9 +1,8 @@
 /* Cube.c 
-   v1.1
+    v1.1
    
-   gcc Cube.c Collection.c Matrix.c Radix.c PowerMatrix.c -g -O0 -o cube
-   valgrind --leak-check=yes ./cube
-   
+    gcc Cube.c Collection.c Matrix.c Radix.c PowerMatrix.c strassenMultiply.c MultiplicateMatrix.c -g -O0 -o cube
+    valgrind --leak-check=yes ./cube
    */
 
 #include <stdio.h>
@@ -13,6 +12,8 @@
 #include "Collection.h"
 #include "Radix.h"
 #include "PowerMatrix.h"
+#include "strassenMultiply.h"
+#include "MultiplicateMatrix.h"
 
 int addMatrixtoCube(int ***q, int* qz, int* ql, int* qc, int **a, int l, int c)
 {
@@ -94,9 +95,9 @@ int main()
 
     for (int u = 0; u < 11; u++) {
 
-        l = 25 + (u % 2);
-        c = 2 + (u % 3);
-        a = initAllocMatrix(l,c,2*u);
+        l = 4 + ((u+1) % 2);
+        c = 4 + ((u+1) % 2);
+        a = initAllocMatrix(l,c,12);
         addMatrixtoCube(q,&qz,ql,qc,a,l,c);
         freeMatrix(a,l);
 
@@ -125,14 +126,53 @@ int main()
 	    q = sortCollection(q, qz, ql, qc, top);
 
 
-    int li[] = {0,1,2,3};
-    int ci[] = {2,3,4,5};
+    // int li[] = {0,1,2};
+    // int ci[] = {1,2,3};
     
-    q[10] = cutMatrix(q[10],&ql[10],&qc[10],4,li,4,ci);
+    // q[10] = cutMatrix(q[10],&ql[10],&qc[10],3,li,3,ci);
 
-    powerMatrix(q[10],ql[10],qc[10],2);
+    powerMatrix(q[1],ql[1],qc[1],2);
+
+    int lj[] = {0,1,2,3};
+    int cj[] = {0,1,2,3};
+    
+    q[6] = cutMatrix(q[6],&ql[6],&qc[6],4,lj,4,cj);
+    q[7] = cutMatrix(q[7],&ql[7],&qc[7],4,lj,4,cj);
+
 
     printCube(q,qz,ql,qc);
+
+    a = malloc(ql[6] * sizeof(int*));
+    for (int i = 0; i < ql[6]; i++) {
+        a[i] = malloc(ql[6] * sizeof(int));
+    }
+    strassenMultiply(q[6],q[7],a,ql[7]);
+    printf("strassenMultiply %dx%d\n", ql[6],ql[6]);
+    printMatrix(a,ql[6],qc[6]);
+    freeMatrix(a,ql[6]);
+
+
+
+    int x1 = ql[6];
+    int y2 = qc[7];
+    a = malloc(x1 * sizeof(int*));
+    for (int i = 0; i < x1; i++)
+    {
+        a[i] = malloc(y2 * sizeof(int));
+
+    }
+    
+    multiplicateMatrix(q[6],ql[6],qc[6],q[7],ql[7],qc[7],a);
+    printf("multiplicateMatrix (%dx%d) x (%dx%d)\n", ql[6],ql[6],ql[7],qc[7]);
+    printMatrix(a,x1,y2);
+
+    freeMatrix(a,x1);
+
+    a = newMatrixMultiplicate(q[6],ql[6],qc[6],q[7],ql[7],qc[7]);
+    printf("newMatrixMultiplicate (%dx%d) x (%dx%d)\n", ql[6],ql[6],ql[7],qc[7]);
+    printMatrix(a,x1,y2);
+
+    freeMatrix(a,x1);
 
     freeCube(q,qz,ql,qc);
     free(ql);
