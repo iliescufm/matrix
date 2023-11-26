@@ -4,7 +4,9 @@ v1.0
 
 Exemple: strassenMultiply
 
-gcc strassen.c Strassen.c Matrix.c
+gcc strassen.c strassenMultiply.c Matrix.c Validate.c -g -O0 -o strassen
+valgrind --leak-check=yes ./strassen
+
 https://www.geeksforgeeks.org/strassens-matrix-multiplication/
 */
 
@@ -28,9 +30,9 @@ int main() {
 
     int l = la;
 
-    int **c;
+    int **c = initAllocMatrix(l,l,-1);
    
-    c = strassen(a, la, ca, b, lb, cb);
+    strassenMultiply(a, b, c, l);
 
     printMatrix(c, l, l);
 
