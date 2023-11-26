@@ -1,7 +1,7 @@
 /* Cube.c 
    v1.1
    
-   gcc Cube.c Matrix.c -g -O0 -o cube
+   gcc Cube.c Collection.c Matrix.c Radix.c -g -O0 -o cube
    valgrind --leak-check=yes ./cube
    
    */
@@ -126,7 +126,7 @@ int main()
     for(int i = 0; i < qz; i++) { 
         sum[i] = sumMatrix(q[i], ql[i], qc[i]); 
         }
-		top = sortVector(sum, qz);
+		sortVector(sum, qz, top);
 	    q = sortCollection(q, qz, ql, qc, top);
 
 

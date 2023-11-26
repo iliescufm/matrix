@@ -104,16 +104,14 @@ int findElementinVector(int odx[],int n, int e){
 	return f;
 }
 
-int* sortVector(int* arr,int n){
-	int* idx = malloc (n* sizeof(int));
+void sortVector(int* arr,int n, int* top){
 	int* odx = malloc (n* sizeof(int));
 	int i;
 	for (i = 0; i < n; i++) 
 		odx[i] = arr[i];
 	radixsort(arr,n);
 	for (i = 0; i < n; i++)
-	    idx[i] = findElementinVector(odx,n,arr[i]);
+	    top[i] = findElementinVector(odx,n,arr[i]);
 
 	free(odx);
-	return idx;
 }
