@@ -107,6 +107,7 @@ void printMatrix(int **a, int nl, int nc)
 
 void printMatrixAddr(int **a, int nl, int nc)
 {
+	if (D) printf("printMatrixAddr [%p] %dx%d\n",(void *)a,nl,nc);
 	int i,j;
 	for (i=0; i<nl; i++)
 	{

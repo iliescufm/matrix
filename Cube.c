@@ -1,7 +1,7 @@
 /* Cube.c 
    v1.1
    
-   gcc Cube.c Collection.c Matrix.c Radix.c -g -O0 -o cube
+   gcc Cube.c Collection.c Matrix.c Radix.c PowerMatrix.c -g -O0 -o cube
    valgrind --leak-check=yes ./cube
    
    */
@@ -12,6 +12,7 @@
 #include "Matrix.h"
 #include "Collection.h"
 #include "Radix.h"
+#include "PowerMatrix.h"
 
 int addMatrixtoCube(int ***q, int* qz, int* ql, int* qc, int **a, int l, int c)
 {
@@ -111,12 +112,6 @@ int main()
         q[u] = transposeMatrix(q[u],&ql[u],&qc[u]);
     }
 
-    int li[] = {1,2};
-    int ci[] = {1,2,3,4};
-    
-    q[8] = cutMatrix(q[8],&ql[8],&qc[8],2,li,4,ci);
-    q[10] = cutMatrix(q[10],&ql[10],&qc[10],2,li,4,ci);
-
 
     //Sort
     int* sum = malloc(qz * sizeof(int));
@@ -130,7 +125,15 @@ int main()
 	    q = sortCollection(q, qz, ql, qc, top);
 
 
+    int li[] = {0,1,2,3};
+    int ci[] = {2,3,4,5};
+    
+    q[10] = cutMatrix(q[10],&ql[10],&qc[10],4,li,4,ci);
+
+    powerMatrix(q[10],ql[10],qc[10],2);
+
     printCube(q,qz,ql,qc);
+
     freeCube(q,qz,ql,qc);
     free(ql);
     free(qc);
