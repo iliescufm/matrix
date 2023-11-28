@@ -70,7 +70,7 @@ int** newMatrixMultiplicate(int** m, int x1, int y1, int** n, int x2, int y2)
     int** a;
     if(y1 != x2) {
 		printf("Cannot perform matrix multiplication\n");
-		return a;
+		return NULL;
 	} else {
         int i,j;
         a = malloc(x1 * sizeof(int*));

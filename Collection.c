@@ -1,3 +1,5 @@
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "Matrix.h"
@@ -73,8 +75,32 @@ int*** addMatrixtoCollection(int*** q, int* z, int* ql, int* qc, int** b, int l,
 	return a;
 }
 
+int addMatrixtoCube(int ***q, int* qz, int* ql, int* qc, int **a, int l, int c)
+{
+	if (*qz < 0) return 1;
+    
+    int i,j;
 
-int*** sortCollection(int ***q, int z, int *ql, int *qc, int *top)
+    int nz = *qz + 1; 
+  
+    ql[*qz] = l;
+    qc[*qz] = c;
+
+    q[*qz] = malloc (l * sizeof(int*));
+	for (i = 0; i < l; i++)
+		{
+            q[*qz][i] = malloc( c * sizeof(int));		
+			for (j = 0; j < c; j++){
+				q[*qz][i][j] = a[i][j];
+			}
+		}
+    *qz = nz;
+
+    return 0;
+
+}
+
+int*** sortCube(int ***q, int z, int *ql, int *qc, int *top)
 {
     if (D) printf("sortCollection #%d \n", z);
 	int ***a;
@@ -105,6 +131,52 @@ int*** sortCollection(int ***q, int z, int *ql, int *qc, int *top)
 	free(oc);
 	return a;
 }
+
+int sortCollection(int ***q, int z, int *ql, int *qc, int *top)
+{
+    if (D) printf("sortCollection #%d \n", z);
+	int ***a;
+	int i,j,k;
+	int *ol = malloc(z * sizeof(int));
+	int *oc = malloc(z * sizeof(int));
+	for (k=0 ; k < z ; k++) {
+		ol[k] = ql[k];
+		oc[k] = qc[k];
+	}
+
+	a = malloc(z * sizeof(int**));
+	for (k = 0; k < z; k++) {
+		a[k]=malloc(ql[top[k]] * sizeof(int*));
+		for (i = 0; i < ql[top[k]]; i++) {
+			a[k][i] = malloc(qc[top[k]] * sizeof(int));
+				for (j = 0; j < qc[top[k]]; j++){
+						a[k][i][j] = q[top[k]][i][j];
+				}
+		}
+	}
+	
+	for (k=0 ; k < z ; k++) {
+		ql[k] = ol[top[k]]; 
+		qc[k] = oc[top[k]];
+
+	}
+		//q[k] = a[k]
+	// for (k = 0; k < z; k++) {
+	// 	for (i = 0; i < ql[k]; i++) {
+	// 			for (j = 0; j < qc[k]; j++){
+	// 					q[k][i][j] = a[k][i][j];
+	// 			}
+	// 	}
+	// }
+
+
+	free(ol);
+	free(oc);
+    freeCollection(a,z,ql,qc);
+
+	return 0;
+}
+
 
 // resize = resizeCollectionCapacity(collection, size, newsize, linesvector, columnsvector)
 int*** resizeCollectionCapacity(int ***w, int z, int nz, int *l, int *c) 
@@ -210,22 +282,20 @@ int*** deleteMatrixfromCollection(int*** q, int* z, int* ql, int* qc, int ki)
 {
     if (D) printf("deleteMatrixfromCollection #%d %d\n", *z, ki);
 	int ***a;
-	int i, j, k, ka =0;
+	int i, j, k;
+	int nz = *z - 1;
+	if (nz == 0) {
+		if (D) printf("Empty collection. Really?\n");
+		return q;
 
-	int* qlo = echoVector(ql,*z);
-	int* qco = echoVector(qc,*z);
-
-	int nz = 2;
-	if (*z > 2) nz = *z;
-
- 	int* qlk = realloc(ql, (nz - 1) * sizeof(int));
-	int* qck = realloc(qc, (nz - 1) * sizeof(int));
-
-	a = malloc((nz -1) * sizeof(int**));
+	};
+	
+	int ka = 0;
+	a = malloc((nz) * sizeof(int**));
 	for (k = 0; k < *z; k++) {
 		if (k != ki) { 
-			qlk[ka] = ql[k];
-			qck[ka] = qc[k];
+			ql[ka] = ql[k];
+			qc[ka] = qc[k];
 		    a[ka]=malloc(ql[k] * sizeof(int*));
 			for (i = 0; i < ql[k]; i++) {
 				a[ka][i] = malloc(qc[k] * sizeof(int));
@@ -235,12 +305,33 @@ int*** deleteMatrixfromCollection(int*** q, int* z, int* ql, int* qc, int ki)
 		ka++;
 		}
 	}
+	*z = nz;
+	return a;
+}
 
-	ql = qlk;
-	qc = qck;
-		
-	if (*z > 1) freeCollection(q,*z,qlo,qco);
-	if (*z > 0) { *z = *z - 1; }
-	if (*z > 1)	{ return a; }
-	else return q;
+int deleteMatrixfromCube(int*** q, int* z, int* ql, int* qc, int ki)
+{
+    if (D) printf("deleteMatrixfromCube #%d %d\n", *z, ki);
+
+	int qz = *z;
+
+    int* qlo = malloc(qz * sizeof(int));
+    int* qco = malloc(qz * sizeof(int));
+
+    for (int i = 0; i < qz; i ++){
+
+        qlo[i]=ql[i];
+        qco[i]=ql[i];
+    }
+
+	int ***w;
+    w = deleteMatrixfromCollection(q, &qz, ql, qc, ki);
+
+    freeCollection(q,qz+1,qlo,qco);
+    free(qlo);
+    free(qco);
+
+	q = w;
+
+	return qz;
 }

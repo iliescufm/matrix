@@ -10,11 +10,16 @@ int validateIndex(int k, int size) {
 	return 1;
 }
 
-int validateSizeOfMatrix(int k1, int k2, int *l, int *c)
+int validateSizeOfMatrix(int k1, int k2, int *ql, int *qc)
 {
-	if(c[k1] != l[k2]) {
+	if(qc[k1] != ql[k2]) {
 		printf("Cannot perform matrix multiplication\n");
 		return 0;
+	} else {
+		if(ql[k1] != qc[k2] || ql[k2] != qc[k2]) {
+			printf("Cannot perform matrix multiplication\n");
+			return 0;
+		}
 	}
 	return 1;
 }

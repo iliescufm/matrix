@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define D 1
+
 // Functie pentru a aduna doua matrice
 void addMatrices(int **A, int **B, int **C, int size) {
     for (int i = 0; i < size; i++) {
