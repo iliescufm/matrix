@@ -62,8 +62,13 @@ int main(void)
 
 		if (key == 'p') {
 			ok = D;
-			if (D) printCollection(q,qz,ql,qc);
-		}
+			if (D) {
+				sum = realloc(sum, qz * sizeof(int));
+				for (int i = 0; i < qz; i++) { sum[i] = sumMatrix(q[i], ql[i], qc[i]); }
+				printCollectionandSum(q,qz,ql,qc,sum);
+			}
+
+			}
 
 		if (key == 'L') {
 			ok = 1;
@@ -140,9 +145,11 @@ int main(void)
 		if (key == 'O') {
 			ok = 1;
 			if (D) printf("Sortarea matricelor\n");
-			// for(int i = 0; i < qz; i++) { sum[i] = sumMatrix(q[i], ql[i], qc[i]); }
-			// top = sortVector(sum, qz);
-			// q = sortq(q, qz, ql, qc, top);
+			sum = realloc(sum, qz * sizeof(int));
+			top = realloc(top, qz * sizeof(int));
+			for (int i = 0; i < qz; i++) { sum[i] = sumMatrix(q[i], ql[i], qc[i]); }
+			sortVector(sum, qz, top);
+			q = sortCube(q, qk, qz, ql, qc, top);
 		}
 		if (key == 'T') {
 			ok = 1;
@@ -159,17 +166,65 @@ int main(void)
 			if (validateIndex(k, qz)) {
 				powerMatrix(q[k], ql[k], ql[k], p);
 			}
+			// (!) nu face modulo
 		}
 		if (key == 'F') { ok = 1;
 			if (D) printf("Eliberarea memoriei unei matrice\n");
-			scanf("%d", &k);
-			if (validateIndex(k, qz)) {
-				q = deleteMatrixfromCollection(q, &qz, ql, qc, k);
+			int ki;
+			scanf("%d", &ki);
+			if (validateIndex(ki, qz)) {
+
+				int* qlo = malloc(qz * sizeof(int));
+				int* qco = malloc(qz * sizeof(int));
+
+				for (int i = 0; i < qz; i ++){
+
+					qlo[i]=ql[i];
+					qco[i]=ql[i];
+				}
+				int ***w;
+				//w = deleteMatrixfromCollection(q, &qz, ql, qc, k);
+				int nz = qz - 0;
+				if (nz == 0) {
+					if (D) printf("Empty collection. Really!?\n");
+				}
+				else {
+					int ka = 0;
+					w = malloc((qk) * sizeof(int**));
+
+					for (k = 0; k < qz; k++) {
+						if (k != ki) { 
+							ql[ka] = ql[k];
+							qc[ka] = qc[k];
+							w[ka]=malloc(ql[k] * sizeof(int*));
+							for (int i = 0; i < ql[k]; i++) {
+								w[ka][i] = malloc(qc[k] * sizeof(int));
+								for (int j = 0; j < qc[k]; j++)
+									w[ka][i][j] = q[k][i][j];
+								}
+						ka++;
+						}
+						}
+					qz = qz - 1;
+					freeCube(q,qz+1,qlo,qco);
+					free(q);
+					free(qlo);
+					free(qco);
+					q = w;
+
+				}
+
 			}
 		}
 		if (key == 'Q') {	ok = 1; 
 			if (D) printf("Eliberarea tuturor resurselor\n");
-			// freeq(q, qz, ql, qc);
+
+			freeCollection(q, qz, ql, qc);
+			free(sum);
+			free(top);
+			free(ql);
+			free(qc);
+ 
 			break;
 		}
 		if (key == 'S') { ok = 1;
@@ -205,12 +260,6 @@ int main(void)
 		}
 		if (ok == 0) if (key != '\n' && key != '\r') printf("Unrecognized command\n");
 	}
-	printCollection(q, qz, ql, qc); 
-	freeCollection(q, qz, ql, qc);
-	free(sum);
-	free(top);
-	free(ql);
-	free(qc);
- 
+
 	return 0;
 }

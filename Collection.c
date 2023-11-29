@@ -48,6 +48,19 @@ void freeCollection(int ***a, int z, int *l, int *c)
 	free(a);
 }
 
+void freeCube(int ***q, int nk, int* ql, int* qc)
+{
+    printf("freeCube [%p]\n", (void *)q);
+
+	int k,i,j;
+
+    for(k = 0; k < nk ; k++)
+    {
+		freeMatrix(q[k],ql[k]);
+    }
+    //free(q); do it in caller function
+}
+
 // newcollection = addMatrixtoCollection(collection, size, matrix, index, lines, columns)
 int*** addMatrixtoCollection(int*** q, int* z, int* ql, int* qc, int** b, int l, int c)
 {
@@ -77,6 +90,8 @@ int*** addMatrixtoCollection(int*** q, int* z, int* ql, int* qc, int** b, int l,
 
 int addMatrixtoCube(int ***q, int* qz, int* ql, int* qc, int **a, int l, int c)
 {
+    if (D) printf("addMatrixtoCube /%d/ \n", *qz);
+
 	if (*qz < 0) return 1;
     
     int i,j;
@@ -100,7 +115,7 @@ int addMatrixtoCube(int ***q, int* qz, int* ql, int* qc, int **a, int l, int c)
 
 }
 
-int*** sortCube(int ***q, int z, int *ql, int *qc, int *top)
+int*** sortCube(int ***q, int qk, int z, int *ql, int *qc, int *top)
 {
     if (D) printf("sortCollection #%d \n", z);
 	int ***a;
@@ -112,7 +127,7 @@ int*** sortCube(int ***q, int z, int *ql, int *qc, int *top)
 		oc[k] = qc[k];
 	}
 
-	a = malloc(z * sizeof(int**));
+	a = malloc(qk * sizeof(int**));
 	for (k = 0; k < z; k++) {
 		a[k]=malloc(ql[top[k]] * sizeof(int*));
 		for (i = 0; i < ql[top[k]]; i++) {

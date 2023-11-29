@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-# define D 1
+# define D 0
 # define DD 0
 # define MODULO 10007
 
@@ -131,7 +131,6 @@ int sumMatrix(int **a, int nl, int nc)
 			s = s + a[i][j];
 		}
 	}
-	printf("%d\n",s);
 	return s % MODULO;
 }
 
@@ -250,6 +249,7 @@ int** initAllocMatrix(int nl, int nc, int v)
 	{
 		for (j = 0; j < nc; j++){
 			a[i][j] = v;
+			if (v<0) a[i][j] = -v;
 		}
 	}
 	return a;
